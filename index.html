@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NOVA Coaching – Coach Sportif</title>
+    <meta
+      name="description"
+      content="NOVA Coaching – Coach sportif personnel. Atteins une nouvelle trajectoire vers tes objectifs grâce à un accompagnement sur-mesure, suivi de progression et coaching immersif."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <!-- 3D background -->
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+
+      <!-- Navigation -->
+      <header class="nav">
+        <div class="nav__logo">
+          <span class="nav__logo-star">★</span>
+          <span class="nav__logo-text">NOVA&nbsp;Coaching</span>
+        </div>
+        <nav class="nav__links">
+          <a href="#section-objectifs">Objectifs</a>
+          <a href="#section-parcours">Parcours</a>
+          <a href="#section-coaching">Coaching</a>
+          <a href="#section-progression">Progression</a>
+          <a href="#section-temoignages">Témoignages</a>
+        </nav>
+        <a href="#section-reservation" class="nav__cta">Réserve ta séance</a>
+        <button class="nav__toggle" aria-label="Ouvrir le menu principal">
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <!-- Scroll progress / section indicator -->
+      <aside class="page-progress" aria-hidden="true">
+        <button class="page-progress__dot is-active" data-target="#top">
+          <span>Intro</span>
+        </button>
+        <button class="page-progress__dot" data-target="#section-objectifs">
+          <span>Objectifs</span>
+        </button>
+        <button class="page-progress__dot" data-target="#section-parcours">
+          <span>Parcours</span>
+        </button>
+        <button class="page-progress__dot" data-target="#section-coaching">
+          <span>Coaching</span>
+        </button>
+        <button class="page-progress__dot" data-target="#section-progression">
+          <span>Progression</span>
+        </button>
+        <button class="page-progress__dot" data-target="#section-temoignages">
+          <span>Témoignages</span>
+        </button>
+        <button class="page-progress__dot" data-target="#section-reservation">
+          <span>Réserver</span>
+        </button>
+      </aside>
+
+      <!-- Hero -->
+      <main>
+        <section class="hero" id="top">
+          <div class="hero__content">
+            <p class="hero__kicker">Bienvenue chez</p>
+            <h1 class="hero__title">
+              <span class="hero__logo-line">
+                <span class="hero__logo-star">★</span>
+                <span class="hero__logo-text">NOVA&nbsp;Coaching</span>
+              </span>
+              <span class="hero__subtitle">
+                Une nouvelle trajectoire vers tes
+                <span class="hero__highlight">objectifs</span>
+              </span>
+            </h1>
+
+            <p class="hero__tagline">
+              Coaching sportif premium, suivi en temps réel et expériences
+              immersives pour te propulser vers la meilleure version de toi‑même.
+            </p>
+
+            <div class="hero__actions">
+              <a href="#section-reservation" class="btn btn--primary">
+                Réserve ta séance offerte
+              </a>
+              <button class="btn btn--ghost" data-scroll-to="#section-coaching">
+                Découvrir l’expérience
+              </button>
+            </div>
+
+            <div class="hero__meta">
+              <div class="hero__meta-item">
+                <span class="hero__meta-label">+120</span>
+                <span class="hero__meta-text">Transformations suivies</span>
+              </div>
+              <div class="hero__meta-item">
+                <span class="hero__meta-label">4,9/5</span>
+                <span class="hero__meta-text">Satisfaction moyenne</span>
+              </div>
+              <div class="hero__meta-item">
+                <span class="hero__meta-label">100%</span>
+                <span class="hero__meta-text">Programme sur‑mesure</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__visual">
+            <div class="hero-card" data-tilt>
+              <div class="hero-card__glow"></div>
+              <div class="hero-card__content">
+                <p class="hero-card__label">Séance d’essai</p>
+                <p class="hero-card__title">Coaching privé 1:1</p>
+                <p class="hero-card__text">
+                  45 minutes pour analyser ton niveau, définir ta trajectoire et
+                  poser les premières briques de ton plan d’action.
+                </p>
+                <div class="hero-card__chips">
+                  <span>Force</span>
+                  <span>Perte de poids</span>
+                  <span>Performance</span>
+                </div>
+                <a href="#section-reservation" class="hero-card__cta">
+                  Réserver maintenant
+                </a>
+              </div>
+            </div>
+            <div class="hero__badge">
+              <p>Nova</p>
+              <p>Coach sportif certifié</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Sections -->
+        <section class="section" id="section-objectifs">
+          <div class="section__header">
+            <p class="section__kicker">Objectifs</p>
+            <h2>Trace une trajectoire claire et mesurable</h2>
+            <p class="section__description">
+              On commence par ce qui compte vraiment pour toi. Ensemble, on
+              définit des objectifs réalistes, ambitieux et surtout mesurables.
+            </p>
+          </div>
+          <div class="grid grid--3">
+            <article class="card card--glass reveal">
+              <h3>Diagnostic complet</h3>
+              <p>
+                Bilan physique, habitudes de vie, contraintes de temps : tout est
+                pris en compte pour construire un programme durable.
+              </p>
+            </article>
+            <article class="card card--glass reveal">
+              <h3>Plan d’entraînement personnalisé</h3>
+              <p>
+                Séances adaptées à ton niveau, ton matériel et ton emploi du
+                temps, mises à jour en fonction de ta progression.
+              </p>
+            </article>
+            <article class="card card--glass reveal">
+              <h3>Accompagnement global</h3>
+              <p>
+                Entraînement, nutrition, récupération et mindset : une approche
+                360° pour des résultats visibles et durables.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Scroll-driven modules with image changes -->
+        <section class="section section--scroll-modules" id="section-parcours">
+          <div class="section__header">
+            <p class="section__kicker">Parcours</p>
+            <h2>Ton expérience, étape par étape</h2>
+            <p class="section__description">
+              À chaque partie du parcours correspond un module visuel : plus tu scrolles,
+              plus tu découvres comment on va travailler ensemble.
+            </p>
+          </div>
+
+          <div class="scroll-modules">
+            <div class="scroll-modules__rail">
+              <article class="scroll-module reveal is-active" data-module="diagnostic">
+                <p class="scroll-module__eyebrow">Étape 1</p>
+                <h3>Diagnostic &amp; vision long terme</h3>
+                <p>
+                  On commence par un échange en profondeur sur ton historique, tes
+                  contraintes et ta motivation. L’objectif : poser une vision claire à 3
+                  mois, 6 mois et 1 an.
+                </p>
+                <ul>
+                  <li>Questionnaire rapide en ligne</li>
+                  <li>Visio d’audit (20 à 30 minutes)</li>
+                  <li>Premières recommandations personnalisées</li>
+                </ul>
+              </article>
+
+              <article class="scroll-module reveal" data-module="programme">
+                <p class="scroll-module__eyebrow">Étape 2</p>
+                <h3>Programme sur‑mesure &amp; planning réaliste</h3>
+                <p>
+                  Tu reçois ton plan de jeu sous forme de modules simples à valider.
+                  Chaque semaine, tu sais exactement quoi faire et combien de temps ça
+                  va te prendre.
+                </p>
+                <ul>
+                  <li>Séances adaptées à ton matériel (salle ou maison)</li>
+                  <li>Planning aligné avec ton emploi du temps</li>
+                  <li>Focus sur 2 ou 3 priorités maximum</li>
+                </ul>
+              </article>
+
+              <article class="scroll-module reveal" data-module="coaching">
+                <p class="scroll-module__eyebrow">Étape 3</p>
+                <h3>Coaching en continu &amp; ajustements</h3>
+                <p>
+                  Tu n’avances jamais seul·e : Nova suit tes retours, ajuste la
+                  difficulté et t’envoie des vidéos explicatives pour corriger tes
+                  mouvements.
+                </p>
+                <ul>
+                  <li>Feedback audio ou vidéo après tes séances</li>
+                  <li>Messages illimités (dans des horaires définis)</li>
+                  <li>Corrections techniques ciblées</li>
+                </ul>
+              </article>
+
+              <article class="scroll-module reveal" data-module="celebration">
+                <p class="scroll-module__eyebrow">Étape 4</p>
+                <h3>Bilans visuels &amp; célébration des résultats</h3>
+                <p>
+                  On fait le point en regardant les progrès concrets : charge, temps,
+                  photos avant/après (si tu es à l’aise) et surtout comment tu te sens au
+                  quotidien.
+                </p>
+                <ul>
+                  <li>Bilans réguliers avec graphiques de progression</li>
+                  <li>Adaptation des objectifs si besoin</li>
+                  <li>Nouveaux défis pour continuer à progresser</li>
+                </ul>
+              </article>
+            </div>
+
+            <div class="scroll-modules__visual">
+              <div
+                class="scroll-modules__image is-active"
+                data-module-visual="diagnostic"
+              >
+                <img
+                  src="./assets/nova-hero.png"
+                  alt="Nova, coach sportif, en posture dynamique sur fond étoilé"
+                  loading="lazy"
+                />
+                <p class="scroll-modules__caption">
+                  Nova t’accompagne dès la première séance pour clarifier ta trajectoire.
+                </p>
+              </div>
+
+              <div class="scroll-modules__image" data-module-visual="programme">
+                <div class="scroll-modules__mockup scroll-modules__mockup--program">
+                  <span class="scroll-modules__badge">Interface coaching</span>
+                  <div class="scroll-modules__mockup-row">
+                    <span>Lundi</span>
+                    <span>Full body – 45 min</span>
+                  </div>
+                  <div class="scroll-modules__mockup-row">
+                    <span>Mercredi</span>
+                    <span>Cardio doux – 30 min</span>
+                  </div>
+                  <div class="scroll-modules__mockup-row">
+                    <span>Samedi</span>
+                    <span>Renfo bas du corps – 40 min</span>
+                  </div>
+                </div>
+                <p class="scroll-modules__caption">
+                  Une visualisation claire de tes séances, pensée pour tenir dans ton
+                  agenda réel.
+                </p>
+              </div>
+
+              <div class="scroll-modules__image" data-module-visual="coaching">
+                <div class="scroll-modules__mockup scroll-modules__mockup--chat">
+                  <span class="scroll-modules__badge">Suivi Nova</span>
+                  <div class="scroll-modules__bubble scroll-modules__bubble--coach">
+                    Pense à bien contrôler la descente sur les squats, ça va protéger
+                    tes genoux. 🔒
+                  </div>
+                  <div class="scroll-modules__bubble scroll-modules__bubble--client">
+                    Merci ! Je me sens déjà plus stable sur la séance d’aujourd’hui.
+                  </div>
+                </div>
+                <p class="scroll-modules__caption">
+                  Feedback humain et précis, directement lié à tes séances et à ta
+                  technique.
+                </p>
+              </div>
+
+              <div class="scroll-modules__image" data-module-visual="celebration">
+                <div class="scroll-modules__mockup scroll-modules__mockup--stats">
+                  <span class="scroll-modules__badge">Progression</span>
+                  <div class="scroll-modules__stat-row">
+                    <span>Force globale</span>
+                    <span>+34&nbsp;%</span>
+                  </div>
+                  <div class="scroll-modules__stat-row">
+                    <span>Énergie au quotidien</span>
+                    <span>+48&nbsp;%</span>
+                  </div>
+                  <div class="scroll-modules__stat-row">
+                    <span>Confiance en soi</span>
+                    <span>+61&nbsp;%</span>
+                  </div>
+                </div>
+                <p class="scroll-modules__caption">
+                  Des bilans visuels pour voir noir sur blanc tout le chemin parcouru.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section--dark" id="section-coaching">
+          <div class="section__header">
+            <p class="section__kicker">Coaching</p>
+            <h2>Une expérience immersive, comme sur Webflow</h2>
+            <p class="section__description">
+              Interface moderne, animations 3D et feedback en temps réel pour te
+              donner l’impression de t’entraîner dans un studio futuriste.
+            </p>
+          </div>
+          <div class="layout-split">
+            <div class="layout-split__pane reveal">
+              <div class="feature-chip">Live &amp; à distance</div>
+              <h3>Tu n’es jamais seul pendant tes séances</h3>
+              <p>
+                Vidéo, corrections en direct, démonstrations de mouvement et
+                ajustements sur mesure. Tu es accompagné à chaque répétition.
+              </p>
+              <ul class="list">
+                <li>Programmes disponibles sur mobile et desktop</li>
+                <li>Suivi vidéo des mouvements clés</li>
+                <li>Feedback vocal et messages entre les séances</li>
+              </ul>
+            </div>
+            <div class="layout-split__pane layout-split__pane--visual reveal">
+              <div class="floating-orbit">
+                <div class="floating-orbit__ring floating-orbit__ring--1"></div>
+                <div class="floating-orbit__ring floating-orbit__ring--2"></div>
+                <div class="floating-orbit__ring floating-orbit__ring--3"></div>
+                <div class="floating-orbit__core">
+                  <span class="floating-orbit__label">Nova</span>
+                  <span class="floating-orbit__sub">Coaching 3D</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="section-progression">
+          <div class="section__header">
+            <p class="section__kicker">Progression</p>
+            <h2>Visualise chaque étape de ta transformation</h2>
+            <p class="section__description">
+              Ton évolution devient une expérience visuelle : graphiques, niveaux
+              débloqués et badges de progression.
+            </p>
+          </div>
+          <div class="grid grid--3">
+            <article class="card card--metric reveal">
+              <div class="card__metric">S1</div>
+              <h3>Point de départ</h3>
+              <p>Tests initiaux, prise de mesures, photos avant/après (option).</p>
+            </article>
+            <article class="card card--metric reveal">
+              <div class="card__metric">S4</div>
+              <h3>Premier palier</h3>
+              <p>Adaptation du corps, premiers gains visibles de force et énergie.</p>
+            </article>
+            <article class="card card--metric reveal">
+              <div class="card__metric">S12</div>
+              <h3>Nouvelle version de toi</h3>
+              <p>Transformation globale, maintien des résultats et nouveaux défis.</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Offer / UX clarity on what you get -->
+        <section class="section section--dark section--offer" id="section-offre">
+          <div class="section__header">
+            <p class="section__kicker">Offre</p>
+            <h2>Un accompagnement pensé comme un produit digital</h2>
+            <p class="section__description">
+              Tu sais exactement ce que tu obtiens, comment se déroule le coaching
+              et ce qui se passe après ton inscription.
+            </p>
+          </div>
+          <div class="offer-grid">
+            <article class="offer-card offer-card--main reveal">
+              <h3>Programme Nova Signature</h3>
+              <p class="offer-card__tagline">
+                12 semaines de coaching premium pour installer des résultats
+                durables.
+              </p>
+              <ul class="offer-card__list">
+                <li>1 séance d’audit complète (visio ou présentiel)</li>
+                <li>Programme d’entraînement mis à jour chaque semaine</li>
+                <li>Suivi WhatsApp pour tes questions entre les séances</li>
+                <li>Conseils nutrition adaptés à ton mode de vie</li>
+                <li>Tableau de bord de progression partagé</li>
+              </ul>
+              <div class="offer-card__footer">
+                <p class="offer-card__price">
+                  <span>À partir de</span>
+                  <strong>149&nbsp;€/mois</strong>
+                  <span class="offer-card__note">sans engagement long terme</span>
+                </p>
+                <a href="#section-reservation" class="btn btn--primary">
+                  Discuter de l’offre
+                </a>
+              </div>
+            </article>
+
+            <article class="offer-card offer-card--secondary reveal">
+              <h3>Tu n’es pas sûr·e que c’est pour toi ?</h3>
+              <p>
+                La séance offerte permet de faire le point sans pression, sans
+                obligation. On vérifie ensemble si le format te convient.
+              </p>
+              <ul class="offer-card__list offer-card__list--compact">
+                <li>Bilan de ton niveau &amp; de ton contexte</li>
+                <li>3 axes de travail concrets à mettre en place</li>
+                <li>Réponses à toutes tes questions sur le coaching</li>
+              </ul>
+              <p class="offer-card__hint">
+                À la fin, tu repars avec une vision claire de la prochaine étape,
+                même si on ne travaille pas ensemble.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Social proof / Testimonials -->
+        <section class="section" id="section-temoignages">
+          <div class="section__header">
+            <p class="section__kicker">Témoignages</p>
+            <h2>Ils ont changé de trajectoire avec Nova</h2>
+            <p class="section__description">
+              Quelques retours de personnes accompagnées sur plusieurs mois. Leur
+              point commun : un quotidien chargé, mais une vraie envie de passer
+              au niveau supérieur.
+            </p>
+          </div>
+
+          <div class="testimonials">
+            <article class="testimonial-card reveal">
+              <header class="testimonial-card__header">
+                <div class="testimonial-card__avatar">L</div>
+                <div>
+                  <p class="testimonial-card__name">Laura, 32 ans</p>
+                  <p class="testimonial-card__meta">Entrepreneure – Perte de poids</p>
+                </div>
+                <div class="testimonial-card__rating" aria-label="Note 5 sur 5">
+                  ★★★★★
+                </div>
+              </header>
+              <p class="testimonial-card__quote">
+                « J’ai perdu 8&nbsp;kg en 4 mois sans avoir l’impression de tout
+                sacrifier. On a adapté les séances à mon emploi du temps, et le
+                suivi WhatsApp m’a vraiment aidée à garder le cap. »
+              </p>
+              <p class="testimonial-card__result">– 8&nbsp;kg • + beaucoup de confiance</p>
+            </article>
+
+            <article class="testimonial-card reveal">
+              <header class="testimonial-card__header">
+                <div class="testimonial-card__avatar">M</div>
+                <div>
+                  <p class="testimonial-card__name">Mehdi, 27 ans</p>
+                  <p class="testimonial-card__meta">Ingénieur – Performance</p>
+                </div>
+                <div class="testimonial-card__rating" aria-label="Note 5 sur 5">
+                  ★★★★★
+                </div>
+              </header>
+              <p class="testimonial-card__quote">
+                « Objectif : être prêt pour un semi-marathon. On a structuré mes
+                semaines entre course, renfo et récup. Résultat : je finis en
+                dessous des 1h45 et sans blessure. »
+              </p>
+              <p class="testimonial-card__result">
+                Semi-marathon terminé • 1h43 • 0 blessure
+              </p>
+            </article>
+
+            <article class="testimonial-card reveal">
+              <header class="testimonial-card__header">
+                <div class="testimonial-card__avatar">S</div>
+                <div>
+                  <p class="testimonial-card__name">Salomé, 40 ans</p>
+                  <p class="testimonial-card__meta">Cadre – Reprise du sport</p>
+                </div>
+                <div class="testimonial-card__rating" aria-label="Note 4,5 sur 5">
+                  ★★★★★
+                </div>
+              </header>
+              <p class="testimonial-card__quote">
+                « J’avais peur de ne pas tenir dans la durée. On a commencé très
+                progressivement, puis augmenté l’intensité. Aujourd’hui je fais
+                3 séances par semaine et j’en ai besoin pour vider ma tête. »
+              </p>
+              <p class="testimonial-card__result">
+                +3 séances/semaine • énergie &amp; sommeil améliorés
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Reservation -->
+        <section class="section section--reservation" id="section-reservation">
+          <div class="section__header">
+            <p class="section__kicker">Séance offerte</p>
+            <h2>Réserve ton appel découverte avec Nova</h2>
+            <p class="section__description">
+              20 minutes en visio pour parler de ton projet, répondre à tes
+              questions et voir si on est un bon fit.
+            </p>
+          </div>
+
+          <div class="reservation">
+            <form class="form reveal" id="reservation-form">
+              <div class="form__grid">
+                <label class="field">
+                  <span>Prénom</span>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="Ton prénom"
+                    required
+                  />
+                </label>
+                <label class="field">
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="ton@email.fr"
+                    required
+                  />
+                </label>
+                <label class="field">
+                  <span>Objectif principal</span>
+                  <select name="goal" required>
+                    <option value="">Sélectionne ton objectif</option>
+                    <option value="perte-de-poids">Perte de poids</option>
+                    <option value="prise-de-masse">Prise de masse</option>
+                    <option value="performance">Performance sportive</option>
+                    <option value="sante">Santé &amp; bien‑être</option>
+                  </select>
+                </label>
+                <label class="field field--full">
+                  <span>Message</span>
+                  <textarea
+                    name="message"
+                    rows="3"
+                    placeholder="Parle-moi un peu de toi, de ton niveau et de ce que tu aimerais atteindre."
+                  ></textarea>
+                </label>
+              </div>
+              <button type="submit" class="btn btn--primary btn--full">
+                Je réserve ma séance offerte
+              </button>
+              <p class="form__hint">
+                Tu recevras un email avec un lien de prise de rendez-vous
+                (calendrier en ligne).
+              </p>
+            </form>
+
+            <aside class="reservation__aside reveal">
+              <div class="reservation__badge">
+                <span>★</span>
+                <span>Places limitées / mois</span>
+              </div>
+              <p>
+                Pour garder un suivi réellement personnalisé, le nombre de
+                personnes accompagnées en même temps est volontairement limité.
+              </p>
+              <p>
+                Si les créneaux sont complets, tu pourras rejoindre la liste
+                d’attente prioritaire.
+              </p>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>© <span id="year"></span> Nova Coaching – Tous droits réservés.</p>
+        <p class="footer__links">
+          <a href="#top">Retour en haut</a>
+          <span>•</span>
+          <a href="mailto:contact@nova-coaching.fr">contact@nova-coaching.fr</a>
+        </p>
+      </footer>
+    </div>
+
+    <!-- Mobile navigation overlay -->
+    <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
+      <div class="nav-overlay__inner">
+        <button class="nav-overlay__close" aria-label="Fermer le menu" data-nav-close>
+          ✕
+        </button>
+        <div class="nav-overlay__logo">
+          <span class="nav__logo-star">★</span>
+          <span class="nav__logo-text">NOVA&nbsp;Coaching</span>
+        </div>
+        <nav class="nav-overlay__links">
+          <a href="#section-objectifs" data-nav-link>Objectifs</a>
+          <a href="#section-parcours" data-nav-link>Parcours</a>
+          <a href="#section-coaching" data-nav-link>Coaching</a>
+          <a href="#section-progression" data-nav-link>Progression</a>
+          <a href="#section-temoignages" data-nav-link>Témoignages</a>
+          <a href="#section-reservation" data-nav-link>Réserver</a>
+        </nav>
+        <p class="nav-overlay__tagline">
+          Une nouvelle trajectoire vers tes objectifs, avec un suivi pensé comme un
+          vrai produit digital.
+        </p>
+      </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
+

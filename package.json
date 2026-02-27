@@ -1,0 +1,37 @@
+{
+  "name": "ai-3d-landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cinematic 3D landing page using Next.js App Router, React Three Fiber, GSAP and Tailwind CSS.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-three/drei": "latest",
+    "@react-three/fiber": "latest",
+    "@react-three/postprocessing": "^3.0.4",
+    "@types/nodemailer": "^7.0.11",
+    "clsx": "^2.1.1",
+    "gsap": "latest",
+    "next": "latest",
+    "nodemailer": "^8.0.1",
+    "react": "latest",
+    "react-dom": "latest",
+    "resend": "^6.9.2",
+    "three": "latest"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "autoprefixer": "10.4.20",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "postcss": "8.4.47",
+    "tailwindcss": "3.4.13",
+    "typescript": "latest"
+  }
+}

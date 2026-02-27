@@ -1,0 +1,659 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.nova-marquee-track {
+  animation: marquee-scroll 28s linear infinite;
+  width: max-content;
+}
+
+.nova-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════════════════════════ */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  color-scheme: dark;
+  --y: #EEFF00;           /* Jaune logo */
+  --y8:  rgba(238,255,0,0.08);
+  --y14: rgba(238,255,0,0.14);
+  --y22: rgba(238,255,0,0.22);
+  --y45: rgba(238,255,0,0.45);
+  --bg:  #020818;
+  --card: #061224;
+}
+
+body {
+  background-color: var(--bg);
+  color: #e8f0ff;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+               Inter, system-ui, sans-serif;
+}
+
+/* Compenser la hauteur du header fixe lors du scroll vers ancre */
+[data-scene-section] { scroll-margin-top: 5rem; }
+@media (min-width: 768px) { [data-scene-section] { scroll-margin-top: 5.5rem; } }
+
+/* ═══════════════════════════════════════════════════════════════
+   BACKGROUND GRADIENT — bleu nuit → hint jaune
+═══════════════════════════════════════════════════════════════ */
+.scene-gradient {
+  background: linear-gradient(
+    to bottom,
+    #020818 0%,
+    #091830 25%,
+    #020818 60%,
+    rgba(238,255,0,0.025) 88%,
+    rgba(238,255,0,0.06)  100%
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+═══════════════════════════════════════════════════════════════ */
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--y);
+  opacity: 0.6;
+}
+
+.section-headline {
+  font-size: clamp(1.5rem, 4.5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  color: #e8f0ff;
+}
+
+/* Blanc → jaune (couleurs logo) */
+.nova-gradient-text {
+  background: linear-gradient(165deg, #ffffff 0%, #f0f4ff 40%, #c8f000 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-body {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: #6b87b0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GSAP SCROLL SCENE — classes ajoutées par useScrollScene
+═══════════════════════════════════════════════════════════════ */
+
+/* Sections — état initial (avant visible) */
+.nova-scene-enter {
+  opacity: 0;
+  transition:
+    opacity   0.9s cubic-bezier(0.22,1,0.36,1),
+    transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  transition-delay: var(--scene-delay, 0ms);
+}
+.nova-scene-enter[data-scene-variant="scene-zoom"]  { transform: scale(0.96) translateY(16px); }
+.nova-scene-enter[data-scene-variant="scene-left"]  { transform: translateX(-24px) scale(0.98); }
+.nova-scene-enter[data-scene-variant="scene-right"] { transform: translateX(24px)  scale(0.98); }
+
+.nova-scene-enter.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Éléments data-reveal — état initial */
+.nova-reveal-block {
+  opacity: 0;
+  transition:
+    opacity   0.9s cubic-bezier(0.22,1,0.36,1),
+    transform 0.9s cubic-bezier(0.22,1,0.36,1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.nova-reveal-block[data-reveal-variant="slide-left"]    { transform: translateX(-40px); }
+.nova-reveal-block[data-reveal-variant="slide-right"]   { transform: translateX(40px);  }
+.nova-reveal-block[data-reveal-variant="zoom-pop"]      { transform: scale(0.90) translateY(12px); }
+.nova-reveal-block[data-reveal-variant="rotate-left"]   { transform: translateX(-28px) rotateY(10deg); transform-origin: right; }
+.nova-reveal-block[data-reveal-variant="rotate-right"]  { transform: translateX(28px)  rotateY(-10deg); transform-origin: left; }
+.nova-reveal-block[data-reveal-variant="cascade-up"]    { transform: translateY(36px); }
+
+.nova-reveal-block.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARD SYSTEM
+═══════════════════════════════════════════════════════════════ */
+.nova-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--y22);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
+.nova-card:hover {
+  border-color: var(--y45);
+  box-shadow: 0 0 0 1px rgba(238,255,0,0.06) inset, 0 20px 60px rgba(0,0,0,0.7), 0 0 40px rgba(238,255,0,0.06);
+  transform: translateY(-2px);
+}
+
+/* Ligne jaune en haut des cartes */
+.nova-card-line::before {
+  content: "";
+  position: absolute;
+  inset-x: 0; top: 0;
+  height: 1px;
+  background: linear-gradient(to right, rgba(238,255,0,0.55) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Icon ring */
+.nova-icon-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: var(--y8);
+  box-shadow: 0 0 0 1px var(--y22) inset;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Séparateur de section */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(238,255,0,0.14) 30%,
+    rgba(238,255,0,0.14) 70%,
+    transparent
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DOT PULSE (badge Disponible)
+═══════════════════════════════════════════════════════════════ */
+@keyframes nova-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(238,255,0,0.55); }
+  50%       { box-shadow: 0 0 0 6px rgba(238,255,0,0);  }
+}
+.nova-dot-pulse { animation: nova-pulse 2s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASS INPUT
+═══════════════════════════════════════════════════════════════ */
+.nova-input {
+  width: 100%;
+  background: rgba(238,255,0,0.02);
+  border: 1px solid var(--y22);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+  color: #e8f0ff;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+.nova-input::placeholder { color: #2d4060; }
+.nova-input:focus {
+  border-color: rgba(238,255,0,0.50);
+  background: rgba(238,255,0,0.04);
+  box-shadow: 0 0 0 3px rgba(238,255,0,0.08);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRICE DISPLAY
+═══════════════════════════════════════════════════════════════ */
+.nova-price-display {
+  font-size: clamp(5rem, 14vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION REVEAL ANIMATIONS (legacy — garde compatibilité)
+═══════════════════════════════════════════════════════════════ */
+@keyframes bounce-top {
+  0%   { transform: translateY(-30px); opacity: 0; }
+  40%  { transform: translateY(6px);   opacity: 1; }
+  65%  { transform: translateY(-4px); }
+  82%  { transform: translateY(2px);  }
+  100% { transform: translateY(0);    }
+}
+.bounce-top { animation: bounce-top 0.9s both; }
+
+@keyframes tracking-in-expand {
+  0%   { letter-spacing: -0.06em; opacity: 0; transform: translateY(10px); }
+  40%  { opacity: 1; }
+  100% { letter-spacing: inherit; opacity: 1; transform: translateY(0); }
+}
+.tracking-in-expand { animation: tracking-in-expand 0.85s cubic-bezier(0.215, 0.61, 0.355, 1) both; }
+
+/* Step number décoratif */
+.nova-step-num {
+  position: absolute;
+  right: 1rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(4rem, 10vw, 6.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(238,255,0,0.04);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Scroll indicator */
+@keyframes scroll-bounce {
+  0%, 100% { transform: translateY(0);   opacity: 0.4; }
+  50%       { transform: translateY(7px); opacity: 0.9; }
+}
+.scroll-indicator { animation: scroll-bounce 2.2s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════════════════════
+   STARS BACKGROUND
+═══════════════════════════════════════════════════════════════ */
+.nova-stars {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.nova-star {
+  position: absolute; bottom: -10px;
+  width: 2px; height: 2px;
+  background: rgba(238,255,0,0.5);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(238,255,0,0.6);
+  animation: nova-rise linear infinite;
+}
+.nova-star::before {
+  content: "";
+  position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%) rotate(35deg);
+  transform-origin: top center;
+  width: 1px; height: 80px;
+  background: linear-gradient(to bottom, rgba(238,255,0,0.3), transparent);
+}
+@keyframes nova-rise {
+  0%   { transform: translate3d(-20vw, 0, 0);    opacity: 0;   }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.5; }
+  100% { transform: translate3d(20vw, -120vh, 0); opacity: 0; }
+}
+.nova-star:nth-child(1)  { left: 5%;  animation-duration: 3s;   }
+.nova-star:nth-child(2)  { left: 15%; animation-duration: 4s;   }
+.nova-star:nth-child(3)  { left: 25%; animation-duration: 2.5s; }
+.nova-star:nth-child(4)  { left: 40%; animation-duration: 3.5s; }
+.nova-star:nth-child(5)  { left: 55%; animation-duration: 4.5s; }
+.nova-star:nth-child(6)  { left: 65%; animation-duration: 3s;   }
+.nova-star:nth-child(7)  { left: 75%; animation-duration: 2.8s; }
+.nova-star:nth-child(8)  { left: 85%; animation-duration: 3.2s; }
+.nova-star:nth-child(9)  { left: 92%; animation-duration: 4s;   }
+.nova-star:nth-child(10) { left: 98%; animation-duration: 3.6s; }
+
+/* ═══════════════════════════════════════════════════════════════
+   COACH PHOTO
+═══════════════════════════════════════════════════════════════ */
+.coach-photo {
+  opacity: 0; transform: translateX(-80px);
+  transition: opacity 2s ease-out, transform 2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+#about.is-visible .coach-photo { opacity: 1; transform: translateX(0); }
+
+/* ═══════════════════════════════════════════════════════════════
+   CAROUSEL 3D
+═══════════════════════════════════════════════════════════════ */
+.nova-carousel-wrapper {
+  display: flex; justify-content: center; align-items: center;
+  padding: 1.5rem 0; perspective: 1200px;
+  transform-style: preserve-3d; touch-action: none;
+}
+.nova-carousel-drag,
+.nova-carousel-spin {
+  position: relative; display: flex; margin: auto;
+  transform-style: preserve-3d;
+  transform: rotateX(-8deg);
+}
+.nova-carousel-item {
+  position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center;
+  padding: 1.5rem 1.25rem; border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(238,255,0,0.07) 0%, transparent 55%),
+    var(--card);
+  border: 1px solid var(--y22);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.nova-carousel-item::after {
+  content: "";
+  position: absolute; inset-x: 0; top: 0; height: 1px;
+  background: linear-gradient(to right, rgba(238,255,0,0.55) 0%, transparent 65%);
+  pointer-events: none;
+}
+.nova-carousel-item:hover {
+  border-color: rgba(238,255,0,0.40);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7), 0 0 30px rgba(238,255,0,0.12);
+}
+.nova-carousel-ground {
+  position: absolute; top: 100%; left: 50%;
+  transform: translate(-50%, -50%) rotateX(90deg);
+  background: radial-gradient(circle, rgba(238,255,0,0.18), transparent 60%);
+  opacity: 0.3;
+}
+
+@keyframes nova-spin        { from { transform: rotateY(0deg);   } to { transform: rotateY(360deg);  } }
+@keyframes nova-spin-revert { from { transform: rotateY(360deg); } to { transform: rotateY(0deg);    } }
+
+/* ═══════════════════════════════════════════════════════════════
+   PHILOSOPHY TIMELINE
+═══════════════════════════════════════════════════════════════ */
+.timeline-node {
+  width: 2.5rem; height: 2.5rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--card);
+  border: 2px solid var(--y22);
+  font-size: 0.7rem; font-weight: 800;
+  color: var(--y); letter-spacing: 0.04em;
+  flex-shrink: 0;
+  transition: border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+  position: relative; z-index: 2;
+}
+.timeline-step.active .timeline-node {
+  background: var(--y);
+  border-color: var(--y);
+  color: #020818;
+  box-shadow: 0 0 20px rgba(238,255,0,0.5);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MÉTHODE NOVA — Spotlight card
+═══════════════════════════════════════════════════════════════ */
+.nova-method-card {
+  position: relative;
+  background:
+    linear-gradient(160deg, rgba(238,255,0,0.06) 0%, transparent 35%),
+    radial-gradient(circle at 50% 0%, rgba(238,255,0,0.10), transparent 60%),
+    #061224;
+  box-shadow:
+    inset 0 1.01rem 0.2rem -1rem #fff0,
+    inset 0 -1.01rem 0.2rem -1rem #0000,
+    0 0 0 1px var(--y22),
+    0 4px 32px rgba(0,0,0,0.7);
+  border-radius: 1.75rem;
+  color: #e8f0ff;
+  padding: 1.25rem;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 22rem;
+  transition: box-shadow 0.4s ease-in-out, transform 0.4s ease-out;
+  overflow: hidden;
+}
+.nova-method-card::before {
+  content: ""; display: block;
+  --offset: 1rem;
+  width: calc(100% + 2 * var(--offset)); height: calc(100% + 2 * var(--offset));
+  position: absolute;
+  left: calc(-1 * var(--offset)); right: calc(-1 * var(--offset));
+  top: calc(-1 * var(--offset));  bottom: calc(-1 * var(--offset));
+  margin: auto;
+  box-shadow: inset 0 0 0 0.06rem rgba(238,255,0,0.10);
+  border-radius: 2.6rem;
+  --ax: 4rem;
+  clip-path: polygon(
+    var(--ax) 0, 0 0, 0 var(--ax), var(--ax) var(--ax),
+    var(--ax) calc(100% - var(--ax)), 0 calc(100% - var(--ax)),
+    0 100%, var(--ax) 100%, var(--ax) calc(100% - var(--ax)),
+    calc(100% - var(--ax)) calc(100% - var(--ax)),
+    calc(100% - var(--ax)) 100%, 100% 100%, 100% calc(100% - var(--ax)),
+    calc(100% - var(--ax)) calc(100% - var(--ax)),
+    calc(100% - var(--ax)) var(--ax), 100% var(--ax),
+    100% 0, calc(100% - var(--ax)) 0,
+    calc(100% - var(--ax)) var(--ax), var(--ax) var(--ax)
+  );
+  transition: all 0.4s ease-in-out;
+  pointer-events: none;
+}
+.nova-method-card:hover { transform: translateY(-4px); }
+.nova-method-card:hover::before {
+  --offset: 0.5rem; --ax: 8rem;
+  border-radius: 2.2rem;
+  box-shadow: inset 0 0 0 0.08rem rgba(238,255,0,0.16);
+}
+.nova-method-card .light-layer {
+  position: absolute; left: 0; top: 0; height: 100%; width: 100%;
+  transform-style: preserve-3d; perspective: 400px;
+  z-index: 0; pointer-events: none;
+}
+.nova-method-card .light-layer .slit {
+  position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+  margin: auto; width: 64%; height: 1.2rem;
+  transform: rotateX(-76deg);
+  background: #020818;
+  box-shadow: 0 0 4px 0 #ffffff00;
+  transition: all 1.5s ease-in-out;
+}
+.nova-method-card .light-layer .lumen {
+  position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+  margin: auto; width: 100%; height: 100%;
+  pointer-events: none; perspective: 400px;
+  opacity: 0; transition: opacity 1.5s ease-in-out;
+}
+.nova-method-card .light-layer .lumen .min {
+  width: 70%; height: 3rem;
+  background: linear-gradient(rgba(238,255,0,0), rgba(238,255,0,0.75));
+  position: absolute; left: 0; right: 0; top: 0; bottom: 2.5rem;
+  margin: auto; transform: rotateX(-42deg); opacity: 0.4;
+}
+.nova-method-card .light-layer .lumen .mid {
+  width: 74%; height: 13rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(238,255,0,0.10), transparent 60%),
+    linear-gradient(rgba(238,255,0,0), rgba(238,255,0,0.9));
+  position: absolute; left: 0; right: 0; top: 0; bottom: 10em;
+  margin: auto; transform: rotateX(-42deg);
+  filter: blur(1rem); opacity: 0.8; border-radius: 100% 100% 0 0;
+}
+.nova-method-card .light-layer .lumen .hi {
+  width: 50%; height: 13rem;
+  background: linear-gradient(rgba(238,255,0,0), rgba(238,255,0,0.85));
+  position: absolute; left: 0; right: 0; top: 0; bottom: 12em;
+  margin: auto; transform: rotateX(22deg);
+  filter: blur(1rem); opacity: 0.6; border-radius: 100% 100% 0 0;
+}
+.nova-method-card .light-layer .darken {
+  position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+  margin: auto; width: 100%; height: 100%;
+  pointer-events: none; perspective: 400px;
+  transition: opacity 1.5s ease-in-out; opacity: 0.5;
+}
+.nova-method-card .light-layer .darken > * { transition: opacity 1.5s ease-in-out; }
+.nova-method-card .light-layer .darken .sl {
+  width: 64%; height: 10rem;
+  background: linear-gradient(#000, #00000000);
+  position: absolute; left: 0; right: 0; top: 9.6em; bottom: 0;
+  margin: auto; filter: blur(0.2rem); opacity: 0.1;
+  border-radius: 0 0 100% 100%; transform: rotateX(-22deg);
+}
+.nova-method-card .light-layer .darken .ll {
+  width: 62%; height: 10rem;
+  background: linear-gradient(#000d, #00000000);
+  position: absolute; left: 0; right: 0; top: 11em; bottom: 0;
+  margin: auto; filter: blur(0.8rem); opacity: 0.4;
+  border-radius: 0 0 100% 100%; transform: rotateX(22deg);
+}
+.nova-method-card .light-layer .darken .slt,
+.nova-method-card .light-layer .darken .srt {
+  width: 0.5rem; height: 4rem;
+  background: linear-gradient(#000b, #00000000);
+  position: absolute; bottom: 0; margin: auto; opacity: 0.6;
+  border-radius: 0 0 100% 100%;
+}
+.nova-method-card .light-layer .darken .slt { left: 0; right: 11.5rem; top: 3.9em; transform: skewY(42deg); }
+.nova-method-card .light-layer .darken .srt { right: 0; left: 11.5rem; top: 3.9em; transform: skewY(-42deg); }
+
+.nova-method-card .content {
+  position: relative; z-index: 1;
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+@keyframes icon-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0);  }
+  50%       { transform: translateX(-50%) translateY(-8px); }
+}
+.nova-method-card .spotlight-icon {
+  position: absolute; top: 12%; left: 50%;
+  transform: translateX(-50%);
+  width: 4rem; height: 4rem; border-radius: 9999px;
+  background:
+    radial-gradient(circle at 25% 0%, rgba(255,255,255,0.95), rgba(255,255,255,0.2) 45%, transparent 70%),
+    radial-gradient(circle at 50% 100%, rgba(238,255,0,0.9), rgba(238,255,0,0.15) 70%);
+  border: 1px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 20px rgba(238,255,0,0.6), 0 0 40px rgba(0,0,0,0.8);
+  z-index: 2; pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out, box-shadow 1.5s ease-in-out, filter 1.5s ease-in-out;
+}
+.nova-method-card .spotlight-icon-bounce { animation: icon-bounce 2s ease-in-out infinite; }
+.nova-method-card .spotlight-icon-img {
+  width: 2rem; height: 2rem; object-fit: contain;
+  filter: brightness(1.1) contrast(1.05);
+}
+.nova-method-card:has(.toggle.active) .spotlight-icon {
+  box-shadow: 0 0 28px rgba(238,255,0,0.9), 0 0 50px rgba(238,255,0,0.3), 0 4px 20px rgba(0,0,0,0.3);
+  filter: brightness(1.15); opacity: 1;
+}
+.nova-method-card .content .bottom { position: relative; }
+.nova-method-card .content .bottom h4 {
+  margin: 0 0 0.75rem;
+  font-size: 1.15rem; font-weight: 700; color: #e8f0ff; letter-spacing: -0.01em;
+}
+.nova-method-card .content .bottom p {
+  margin: 0; padding-bottom: 0.7rem;
+  color: rgba(232,240,255,0.45); font-size: 0.78rem; font-weight: 400;
+  border-bottom: 1px solid rgba(238,255,0,0.08);
+  max-width: 72%; line-height: 1.6;
+}
+.nova-method-card .content .bottom .toggle {
+  position: absolute; right: 0; bottom: 0;
+  height: 2rem; width: 4.8rem; border-radius: 0.6rem;
+  background: #000;
+  box-shadow:
+    inset 0 -8px 8px 0.3rem #0004,
+    inset 0 0 1px 0.3rem #ddd,
+    inset 0 -2px 1px 0.3rem #fff,
+    inset 0 1px 2px 0.3rem #0006,
+    inset 0 0 1px 0.8rem #aaa;
+  cursor: pointer; transition: all 1.5s ease-in-out;
+}
+.nova-method-card .content .bottom .toggle::before {
+  content: ""; display: block;
+  position: absolute; left: 0; right: 0; top: 0; bottom: 0;
+  margin: auto; width: 3.4rem; height: 0.68rem;
+  border-radius: 0.2rem; background: #000;
+  transition: all 1.5s ease-in-out;
+}
+.nova-method-card .content .bottom .toggle .handle {
+  position: absolute; top: 0; bottom: 0.04rem;
+  margin: auto; left: 0.68rem;
+  width: 40%; height: 30%;
+  background: #aaa; border-radius: 0.2rem;
+  box-shadow: inset 0 1px 4px 0 #fff, inset 0 -1px 1px 0 #000a, 0 0 1px 1px #0003, 1px 3px 6px 1px #000a;
+  transition: all 1.5s ease-in-out;
+}
+.nova-method-card .content .bottom .toggle.active .handle { transform: translateX(1.58rem); }
+.nova-method-card .content .bottom .toggle span {
+  pointer-events: none; text-align: center;
+  position: absolute; left: 0; right: 0; margin: auto;
+  bottom: calc(100% + 0.4rem);
+  font-size: 0.6rem; font-weight: 300; color: #555;
+  opacity: 0; transition: opacity 1.5s ease-in-out;
+}
+.nova-method-card .content .bottom .toggle:hover span { opacity: 1; }
+.nova-method-card .content .bottom .toggle:not(.active):hover .handle { transform: translateX(0.2rem); }
+.nova-method-card:has(.toggle.active) {
+  box-shadow:
+    inset 0 1.01rem 0.1rem -1rem #fffa,
+    inset 0 -4rem 3rem -3rem #000a,
+    0 -1.02rem 0.2rem -1rem #fffa,
+    0 1rem 0.2rem -1rem #000,
+    0 0 0 1px rgba(238,255,0,0.18),
+    0 4px 4px 0 #0004;
+}
+.nova-method-card:has(.toggle.active) .content    { opacity: 1; transform: translateY(0); }
+.nova-method-card:has(.toggle.active) .slit       { background: #fff; box-shadow: 0 0 4px 0 #fff; }
+.nova-method-card:has(.toggle.active) .lumen      { opacity: 0.5; }
+.nova-method-card:has(.toggle.active) .darken     { opacity: 0.8; }
+.nova-method-card:has(.toggle.active) .darken .sl { opacity: 0.2; }
+.nova-method-card:has(.toggle.active) .darken .ll { opacity: 1;   }
+.nova-method-card:has(.toggle.active) .darken .slt,
+.nova-method-card:has(.toggle.active) .darken .srt { opacity: 1; }
+.nova-method-card:has(.toggle.active) .content .bottom .toggle::before {
+  background: #fffc; box-shadow: 0 0 0.3rem 0.2rem #fff7;
+}
+.nova-method-card:has(.toggle.active) .content .bottom .toggle .handle {
+  box-shadow: inset 0 1px 12px 0 #fff, inset 0 -1px 1px 0 #fffa, 0 0 2px 1px #4443, 1px 3px 6px 1px #0004;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATED GRADIENT BAR
+═══════════════════════════════════════════════════════════════ */
+@keyframes gradient-scroll {
+  0%   { background-position: 0% 50%;   }
+  100% { background-position: 100% 50%; }
+}
+.animated-gradient-bar {
+  background-image: linear-gradient(to right, rgba(238,255,0,0.12), rgba(238,255,0,0.60), rgba(238,255,0,0.12));
+  background-size: 250% 100%;
+  animation: gradient-scroll 4s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NOVA PHILOSOPHY — Phases (legacy compatibility)
+═══════════════════════════════════════════════════════════════ */
+@keyframes nova-phase-in {
+  0%   { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.nova-phase-list .nova-phase-item { opacity: 0; position: relative; }
+.nova-phase-list.nova-phase-visible .nova-phase-item {
+  animation: nova-phase-in 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation-delay: calc(var(--phase-index, 0) * 0.12s);
+}
+@keyframes nova-phase-line-in {
+  0%   { transform: scaleY(0); opacity: 0; }
+  100% { transform: scaleY(1); opacity: 1; }
+}
+.nova-phase-card { position: relative; }
+.nova-phase-list .nova-phase-card::before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, rgba(238,255,0,0.9), rgba(238,255,0,0.3));
+  border-radius: inherit; transform-origin: top;
+  transform: scaleY(0); opacity: 0; pointer-events: none;
+}
+.nova-phase-list.nova-phase-visible .nova-phase-card::before {
+  animation: nova-phase-line-in 0.9s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation-delay: calc(var(--phase-index, 0) * 0.12s);
+}
