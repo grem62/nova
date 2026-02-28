@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { Viewport } from "next";
 import { Suspense } from "react";
 import { StarsBackground } from "@/components/layout/StarsBackground";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "Nova Coaching – Coaching sportif premium",
@@ -27,6 +28,7 @@ export default function RootLayout(props: { children: ReactNode }) {
           <StarsBackground />
         </Suspense>
         {props.children}
+        <Analytics />
       </body>
     </html>
   );
