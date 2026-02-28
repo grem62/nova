@@ -1,48 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import Image from "next/image";
 
-const VIDEO_FILES = [
-  "0_Exercise_Gym_3840x2160.mp4",
-  "0_Fitness_Gym_3840x2160.mp4",
-  "6035952_Gym_Fitness_3840x2160.mp4",
-  "run.mp4",
-];
+// IDs YouTube (par défaut ou via NEXT_PUBLIC_YOUTUBE_VIDEO_IDS)
+const DEFAULT_IDS = ["WkxwB9hGExE", "RADDFCCN_LY", "FeiIkkfe7LU", "8vPWF4JJXIY"];
+const YOUTUBE_IDS = (
+  process.env.NEXT_PUBLIC_YOUTUBE_VIDEO_IDS ?? DEFAULT_IDS.join(",")
+)
+  .split(",")
+  .map((id) => id.trim())
+  .filter(Boolean);
 
-// Héberger les vidéos sur un CDN (Vercel Blob, Cloudflare R2…) et définir NEXT_PUBLIC_VIDEO_BASE_URL
-const VIDEO_BASE = process.env.NEXT_PUBLIC_VIDEO_BASE_URL ?? "";
-const PLAYLIST = VIDEO_FILES.map((f) => (VIDEO_BASE ? `${VIDEO_BASE.replace(/\/$/, "")}/${f}` : `/${f}`));
+const EMBED_URL =
+  YOUTUBE_IDS.length > 0
+    ? `https://www.youtube.com/embed/${YOUTUBE_IDS[0]}?playlist=${YOUTUBE_IDS.join(",")}&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`
+    : null;
 
 export function IntroVideoSection() {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const idxRef   = useRef(0);
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-
-    const playVideo = () => {
-      v.src = PLAYLIST[idxRef.current];
-      v.load();
-      v.play().catch(() => {
-        const resume = () => { v.play().catch(() => {}); };
-        window.addEventListener("touchend", resume, { once: true });
-        window.addEventListener("click",    resume, { once: true });
-      });
-    };
-
-    const onEnded = () => {
-      idxRef.current = (idxRef.current + 1) % PLAYLIST.length;
-      playVideo();
-    };
-
-    v.addEventListener("ended", onEnded);
-    playVideo();
-
-    return () => v.removeEventListener("ended", onEnded);
-  }, []);
-
   return (
     <section
       id="nova-intro-video"
@@ -50,12 +24,20 @@ export function IntroVideoSection() {
       className="relative overflow-hidden"
       style={{ height: "100svh", minHeight: "600px" }}
     >
-      <video
-        ref={videoRef}
-        className="absolute inset-0 h-full w-full object-cover scale-110"
-        muted playsInline
-        data-parallax-layer="slow"
-      />
+      {EMBED_URL ? (
+        <div className="absolute inset-0 min-h-full min-w-full overflow-hidden">
+          <iframe
+            src={EMBED_URL}
+            title="Nova Coaching - Vidéo d'intro"
+            className="absolute left-1/2 top-1/2 h-[56.25vw] min-h-full min-w-full w-[177.78vh] -translate-x-1/2 -translate-y-1/2 scale-110"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            data-parallax-layer="slow"
+          />
+        </div>
+      ) : (
+        <div className="absolute inset-0 bg-[#020818]" />
+      )}
 
       {/* ── Overlays ── */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#020818]/95 via-[#020818]/65 to-[#020818]/20" />
