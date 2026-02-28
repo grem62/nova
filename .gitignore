@@ -32,5 +32,7 @@ Thumbs.db
 # Vercel
 .vercel
 
-# Vidéos (trop lourdes pour GitHub — héberger sur CDN)
-public/*.mp4
+# Vidéos 4K d'origine (garder uniquement les compressées intro*_720.mp4 / intro*.webm)
+public/0_*.mp4
+public/6035952_*.mp4
+public/run.mp4

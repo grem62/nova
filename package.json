@@ -4,6 +4,8 @@
   "private": true,
   "description": "Cinematic 3D landing page using Next.js App Router, React Three Fiber, GSAP and Tailwind CSS.",
   "scripts": {
+    "compress-videos": "bash scripts/compress-videos.sh",
+    "upload-videos": "node scripts/upload-videos-to-blob.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -14,6 +16,7 @@
     "@react-three/fiber": "latest",
     "@react-three/postprocessing": "^3.0.4",
     "@types/nodemailer": "^7.0.11",
+    "@vercel/blob": "^2.3.0",
     "clsx": "^2.1.1",
     "gsap": "latest",
     "next": "latest",

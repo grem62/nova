@@ -1,73 +1,48 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-// IDs YouTube (par défaut ou via NEXT_PUBLIC_YOUTUBE_VIDEO_IDS sur Vercel)
-const DEFAULT_IDS = ["WkxwB9hGExE", "RADDFCCN_LY", "FeiIkkfe7LU", "8vPWF4JJXIY"];
-const YOUTUBE_IDS = (
-  process.env.NEXT_PUBLIC_YOUTUBE_VIDEO_IDS ?? DEFAULT_IDS.join(",")
-)
-  .split(",")
-  .map((id) => id.trim())
-  .filter(Boolean);
-
-declare global {
-  interface Window {
-    YT?: unknown;
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
+// Vidéos compressées 720p (scripts/compress-videos.sh) — WebM + MP4 fallback
+const VIDEOS = [
+  { webm: "/intro1.webm", mp4: "/intro1_720.mp4" },
+  { webm: "/intro2.webm", mp4: "/intro2_720.mp4" },
+  { webm: "/intro3.webm", mp4: "/intro3_720.mp4" },
+  { webm: "/intro4.webm", mp4: "/intro4_720.mp4" },
+];
 
 export function IntroVideoSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
-    if (YOUTUBE_IDS.length === 0 || !containerRef.current) return;
+    const v = videoRef.current;
+    if (!v) return;
 
-    const initPlayer = () => {
-      if (!containerRef.current || !(window as Window & { YT?: { Player: new (id: string, opts: object) => unknown } }).YT) return;
-      const YT = (window as Window & { YT: { Player: new (id: string, opts: object) => { mute: () => void; playVideo: () => void } } }).YT;
-      const div = document.createElement("div");
-      div.id = "yt-player";
-      div.className = "absolute left-1/2 top-1/2 h-[56.25vw] min-h-full min-w-full w-[177.78vh] -translate-x-1/2 -translate-y-1/2 scale-110";
-      containerRef.current.appendChild(div);
-
-      new YT.Player("yt-player", {
-        videoId: YOUTUBE_IDS[0],
-        playerVars: {
-          autoplay: 1,
-          mute: 1,
-          loop: 1,
-          playlist: YOUTUBE_IDS.join(","),
-          controls: 0,
-          rel: 0,
-          playsinline: 1,
-        },
-        events: {
-          onReady: (e: { target: { mute: () => void; playVideo: () => void } }) => {
-            e.target.mute();
-            e.target.playVideo();
-          },
-        },
+    const play = () => {
+      v.load();
+      v.play().catch(() => {
+        const resume = () => v.play().catch(() => {});
+        window.addEventListener("touchend", resume, { once: true });
+        window.addEventListener("click", resume, { once: true });
       });
     };
 
-    if ((window as Window & { YT?: { Player: unknown } }).YT?.Player) {
-      initPlayer();
-    } else {
-      (window as Window & { onYouTubeIframeAPIReady?: () => void }).onYouTubeIframeAPIReady = initPlayer;
-      const script = document.createElement("script");
-      script.src = "https://www.youtube.com/iframe_api";
-      script.async = true;
-      document.head.appendChild(script);
-    }
-
-    return () => {
-      const el = document.getElementById("yt-player");
-      if (el) el.remove();
+    const onEnded = () => {
+      setIdx((i) => (i + 1) % VIDEOS.length);
     };
+
+    v.addEventListener("ended", onEnded);
+    play();
+    return () => v.removeEventListener("ended", onEnded);
   }, []);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.load();
+    v.play().catch(() => {});
+  }, [idx]);
 
   return (
     <section
@@ -76,11 +51,16 @@ export function IntroVideoSection() {
       className="relative overflow-hidden"
       style={{ height: "100svh", minHeight: "600px" }}
     >
-      {YOUTUBE_IDS.length > 0 ? (
-        <div ref={containerRef} className="absolute inset-0 min-h-full min-w-full overflow-hidden" />
-      ) : (
-        <div className="absolute inset-0 bg-[#020818]" />
-      )}
+      <video
+        ref={videoRef}
+        className="absolute inset-0 h-full w-full object-cover scale-110"
+        muted
+        playsInline
+        data-parallax-layer="slow"
+      >
+        <source src={VIDEOS[idx].webm} type="video/webm" />
+        <source src={VIDEOS[idx].mp4} type="video/mp4" />
+      </video>
 
       {/* ── Overlays ── */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#020818]/95 via-[#020818]/65 to-[#020818]/20" />
