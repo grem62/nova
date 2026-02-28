@@ -11,10 +11,10 @@ const YOUTUBE_IDS = (
   .map((id) => id.trim())
   .filter(Boolean);
 
-// youtube-nocookie.com évite certains blocages d'embed sur les domaines tiers (Vercel)
+// URL minimale pour maximiser la compatibilité. Les vidéos doivent être PUBLIQUES sur YouTube.
 const EMBED_URL =
   YOUTUBE_IDS.length > 0
-    ? `https://www.youtube-nocookie.com/embed/${YOUTUBE_IDS[0]}?playlist=${YOUTUBE_IDS.join(",")}&autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`
+    ? `https://www.youtube.com/embed/${YOUTUBE_IDS[0]}?autoplay=1&mute=1&loop=1&playlist=${YOUTUBE_IDS[0]}`
     : null;
 
 export function IntroVideoSection() {
