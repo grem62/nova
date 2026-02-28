@@ -2,12 +2,19 @@
 
 import Image from "next/image";
 
-// Vimeo : plus fiable que YouTube pour l'embed. Compte gratuit 500 Mo.
-// NEXT_PUBLIC_VIDEO_SOURCE=vimeo + NEXT_PUBLIC_VIMEO_VIDEO_ID=123456789
-const VIMEO_ID = process.env.NEXT_PUBLIC_VIMEO_VIDEO_ID?.trim();
-const VIMEO_EMBED =
-  VIMEO_ID
-    ? `https://player.vimeo.com/video/${VIMEO_ID}?autoplay=1&muted=1&loop=1&background=1&title=0&byline=0&portrait=0`
+// IDs YouTube (par défaut ou via NEXT_PUBLIC_YOUTUBE_VIDEO_IDS sur Vercel)
+// Format exact : WkxwB9hGExE,RADDFCCN_LY,FeiIkkfe7LU,8vPWF4JJXIY (sans espaces)
+const DEFAULT_IDS = ["WkxwB9hGExE", "RADDFCCN_LY", "FeiIkkfe7LU", "8vPWF4JJXIY"];
+const YOUTUBE_IDS = (
+  process.env.NEXT_PUBLIC_YOUTUBE_VIDEO_IDS ?? DEFAULT_IDS.join(",")
+)
+  .split(",")
+  .map((id) => id.trim())
+  .filter(Boolean);
+
+const EMBED_URL =
+  YOUTUBE_IDS.length > 0
+    ? `https://www.youtube.com/embed/${YOUTUBE_IDS[0]}?playlist=${YOUTUBE_IDS.join(",")}&autoplay=1&mute=1&loop=1&controls=0&rel=0`
     : null;
 
 export function IntroVideoSection() {
@@ -18,13 +25,13 @@ export function IntroVideoSection() {
       className="relative overflow-hidden"
       style={{ height: "100svh", minHeight: "600px" }}
     >
-      {VIMEO_EMBED ? (
+      {EMBED_URL ? (
         <div className="absolute inset-0 min-h-full min-w-full overflow-hidden">
           <iframe
-            src={VIMEO_EMBED}
+            src={EMBED_URL}
             title="Nova Coaching - Vidéo d'intro"
             className="absolute left-1/2 top-1/2 h-[56.25vw] min-h-full min-w-full w-[177.78vh] -translate-x-1/2 -translate-y-1/2 scale-110"
-            allow="autoplay; fullscreen; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             data-parallax-layer="slow"
           />

@@ -1,18 +1,22 @@
-# Vidéo d'intro (Vimeo)
+# Vidéos d'intro (YouTube)
 
-YouTube ne fonctionne pas correctement en embed. Utilise **Vimeo** à la place.
+## Variable Vercel — Configuration exacte
 
-## Étapes
+1. Vercel → ton projet → **Settings** → **Environment Variables**
+2. **Add New** :
+   - **Key** : `NEXT_PUBLIC_YOUTUBE_VIDEO_IDS`
+   - **Value** : `WkxwB9hGExE,RADDFCCN_LY,FeiIkkfe7LU,8vPWF4JJXIY`
+   - **Important** : pas d'espaces, pas de guillemets, juste les IDs séparés par des virgules
+3. Coche **Production** et **Preview**
+4. **Save**
+5. **Redeploy** (Deployments → ⋮ → Redeploy)
 
-1. **Créer un compte** sur [vimeo.com](https://vimeo.com) (gratuit)
-2. **Uploader une vidéo** (ou les 4 en une seule avec un montage)
-   - Compte gratuit : 500 Mo/semaine
-3. **Récupérer l'ID** : vimeo.com/123456789 → l'ID est `123456789`
-4. **Paramètres de la vidéo** : Autoriser le partage → Intégrer sur n'importe quel site
-5. **Vercel** : Settings → Environment Variables
-   - `NEXT_PUBLIC_VIMEO_VIDEO_ID` = `123456789`
+## Erreurs fréquentes
 
-## Pour 4 vidéos
+- ❌ `NEXT_PUBLIC_YOUTUBE_VIDEO_IDS = "WkxwB9hGExE,..."` → pas de guillemets dans la valeur
+- ❌ Espaces : `WkxwB9hGExE, RADDFCCN_LY` → éviter les espaces après les virgules
+- ❌ Mauvaise casse : `next_public_youtube_video_ids` → doit être exactement `NEXT_PUBLIC_YOUTUBE_VIDEO_IDS`
 
-Option A : Monte les 4 en une seule vidéo sur Vimeo  
-Option B : Utilise la meilleure des 4 comme vidéo unique
+## Vidéos YouTube
+
+Les 4 vidéos doivent être **Public** et **Autoriser l'intégration** activé (YouTube Studio → Détails de la vidéo).
