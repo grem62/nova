@@ -1,9 +1,9 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 
 // IDs YouTube (par défaut ou via NEXT_PUBLIC_YOUTUBE_VIDEO_IDS sur Vercel)
-// Format exact : WkxwB9hGExE,RADDFCCN_LY,FeiIkkfe7LU,8vPWF4JJXIY (sans espaces)
 const DEFAULT_IDS = ["WkxwB9hGExE", "RADDFCCN_LY", "FeiIkkfe7LU", "8vPWF4JJXIY"];
 const YOUTUBE_IDS = (
   process.env.NEXT_PUBLIC_YOUTUBE_VIDEO_IDS ?? DEFAULT_IDS.join(",")
@@ -12,12 +12,63 @@ const YOUTUBE_IDS = (
   .map((id) => id.trim())
   .filter(Boolean);
 
-const EMBED_URL =
-  YOUTUBE_IDS.length > 0
-    ? `https://www.youtube.com/embed/${YOUTUBE_IDS[0]}?playlist=${YOUTUBE_IDS.join(",")}&autoplay=1&mute=1&loop=1&controls=0&rel=0`
-    : null;
+declare global {
+  interface Window {
+    YT?: unknown;
+    onYouTubeIframeAPIReady?: () => void;
+  }
+}
 
 export function IntroVideoSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (YOUTUBE_IDS.length === 0 || !containerRef.current) return;
+
+    const initPlayer = () => {
+      if (!containerRef.current || !(window as Window & { YT?: { Player: new (id: string, opts: object) => unknown } }).YT) return;
+      const YT = (window as Window & { YT: { Player: new (id: string, opts: object) => { mute: () => void; playVideo: () => void } } }).YT;
+      const div = document.createElement("div");
+      div.id = "yt-player";
+      div.className = "absolute left-1/2 top-1/2 h-[56.25vw] min-h-full min-w-full w-[177.78vh] -translate-x-1/2 -translate-y-1/2 scale-110";
+      containerRef.current.appendChild(div);
+
+      new YT.Player("yt-player", {
+        videoId: YOUTUBE_IDS[0],
+        playerVars: {
+          autoplay: 1,
+          mute: 1,
+          loop: 1,
+          playlist: YOUTUBE_IDS.join(","),
+          controls: 0,
+          rel: 0,
+          playsinline: 1,
+        },
+        events: {
+          onReady: (e: { target: { mute: () => void; playVideo: () => void } }) => {
+            e.target.mute();
+            e.target.playVideo();
+          },
+        },
+      });
+    };
+
+    if ((window as Window & { YT?: { Player: unknown } }).YT?.Player) {
+      initPlayer();
+    } else {
+      (window as Window & { onYouTubeIframeAPIReady?: () => void }).onYouTubeIframeAPIReady = initPlayer;
+      const script = document.createElement("script");
+      script.src = "https://www.youtube.com/iframe_api";
+      script.async = true;
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      const el = document.getElementById("yt-player");
+      if (el) el.remove();
+    };
+  }, []);
+
   return (
     <section
       id="nova-intro-video"
@@ -25,17 +76,8 @@ export function IntroVideoSection() {
       className="relative overflow-hidden"
       style={{ height: "100svh", minHeight: "600px" }}
     >
-      {EMBED_URL ? (
-        <div className="absolute inset-0 min-h-full min-w-full overflow-hidden">
-          <iframe
-            src={EMBED_URL}
-            title="Nova Coaching - Vidéo d'intro"
-            className="absolute left-1/2 top-1/2 h-[56.25vw] min-h-full min-w-full w-[177.78vh] -translate-x-1/2 -translate-y-1/2 scale-110"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            data-parallax-layer="slow"
-          />
-        </div>
+      {YOUTUBE_IDS.length > 0 ? (
+        <div ref={containerRef} className="absolute inset-0 min-h-full min-w-full overflow-hidden" />
       ) : (
         <div className="absolute inset-0 bg-[#020818]" />
       )}
