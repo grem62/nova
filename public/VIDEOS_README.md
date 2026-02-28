@@ -1,20 +1,18 @@
-# Vidéos d'intro
+# Vidéo d'intro (Vimeo)
 
-Les vidéos MP4 (~114 Mo) ne sont pas versionnées sur GitHub pour garder le dépôt léger.
+YouTube ne fonctionne pas correctement en embed. Utilise **Vimeo** à la place.
 
-## En local
+## Étapes
 
-Place les 4 fichiers dans `public/` :
-- `0_Exercise_Gym_3840x2160.mp4`
-- `0_Fitness_Gym_3840x2160.mp4`
-- `6035952_Gym_Fitness_3840x2160.mp4`
-- `run.mp4`
+1. **Créer un compte** sur [vimeo.com](https://vimeo.com) (gratuit)
+2. **Uploader une vidéo** (ou les 4 en une seule avec un montage)
+   - Compte gratuit : 500 Mo/semaine
+3. **Récupérer l'ID** : vimeo.com/123456789 → l'ID est `123456789`
+4. **Paramètres de la vidéo** : Autoriser le partage → Intégrer sur n'importe quel site
+5. **Vercel** : Settings → Environment Variables
+   - `NEXT_PUBLIC_VIMEO_VIDEO_ID` = `123456789`
 
-## En production (Vercel, etc.)
+## Pour 4 vidéos
 
-1. Héberge les vidéos sur un CDN (Vercel Blob, Cloudflare R2, etc.)
-2. Ajoute dans `.env.local` :
-   ```
-   NEXT_PUBLIC_VIDEO_BASE_URL=https://ton-cdn.com/videos
-   ```
-3. L’URL finale sera : `https://ton-cdn.com/videos/run.mp4` etc.
+Option A : Monte les 4 en une seule vidéo sur Vimeo  
+Option B : Utilise la meilleure des 4 comme vidéo unique
