@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsapClient";
-
 const steps = [
   {
     num: "01",
@@ -32,83 +29,9 @@ const steps = [
 ];
 
 export function PhilosophySection() {
-  const sectionRef  = useRef<HTMLElement>(null);
-  const lineRef     = useRef<HTMLDivElement>(null);
-  const fillRef     = useRef<HTMLDivElement>(null);
-  const stepsRef    = useRef<HTMLDivElement[]>([]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const section = sectionRef.current;
-    const line    = lineRef.current;
-    const fill    = fillRef.current;
-    if (!section || !line || !fill) return;
-
-    const ctx = gsap.context(() => {
-      /* ── Ligne jaune qui s'étire au scroll ── */
-      gsap.fromTo(fill,
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          transformOrigin: "top center",
-          ease: "none",
-          scrollTrigger: {
-            trigger: line,
-            start: "top 70%",
-            end:   "bottom 30%",
-            scrub: 1.2,
-          }
-        }
-      );
-
-      /* ── Chaque étape entre depuis la droite ── */
-      stepsRef.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.fromTo(el,
-          { opacity: 0, x: 40, scale: 0.97 },
-          {
-            opacity: 1, x: 0, scale: 1,
-            duration: 0.7,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 82%",
-              toggleActions: "play none none reverse",
-            },
-            delay: i * 0.08,
-          }
-        );
-
-        /* ── Nœud s'allume quand l'étape est visible ── */
-        const node = el.querySelector<HTMLElement>(".timeline-node");
-        if (node) {
-          ScrollTrigger.create({
-            trigger: el,
-            start: "top 75%",
-            onEnter: () => {
-              node.style.background = "#EEFF00";
-              node.style.borderColor = "#EEFF00";
-              node.style.color = "#020818";
-              node.style.boxShadow = "0 0 20px rgba(238,255,0,0.50)";
-            },
-            onLeaveBack: () => {
-              node.style.background = "";
-              node.style.borderColor = "";
-              node.style.color = "";
-              node.style.boxShadow = "";
-            },
-          });
-        }
-      });
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
   return (
     <section
       id="philosophie"
-      ref={sectionRef}
       data-scene-section
       className="relative px-5 py-20 sm:px-10 lg:px-24"
     >
@@ -136,25 +59,23 @@ export function PhilosophySection() {
         {/* ── Timeline ── */}
         <div className="relative flex gap-8 lg:gap-14">
 
-          {/* Ligne verticale + fill animé */}
+          {/* Ligne verticale + fill animé (CSS) */}
           <div
-            ref={lineRef}
             className="relative hidden w-[2px] shrink-0 lg:block"
             style={{ background: "rgba(238,255,0,0.08)" }}
           >
             <div
-              ref={fillRef}
-              className="absolute inset-x-0 top-0 h-full origin-top rounded-full"
-              style={{ background: "linear-gradient(to bottom, #EEFF00 0%, rgba(238,255,0,0.25) 100%)", scaleY: 0 } as React.CSSProperties}
+              className="timeline-fill absolute inset-x-0 top-0 h-full origin-top rounded-full"
+              style={{ background: "linear-gradient(to bottom, #EEFF00 0%, rgba(238,255,0,0.25) 100%)" }}
             />
           </div>
 
           {/* Steps */}
           <div className="flex-1 space-y-2.5">
-            {steps.map((step, i) => (
+            {steps.map((step) => (
               <div
                 key={step.num}
-                ref={(el) => { if (el) stepsRef.current[i] = el; }}
+                data-reveal
                 className="timeline-step group flex items-start gap-4 rounded-xl p-4 transition"
                 style={{
                   background: "rgba(6,18,36,0.60)",

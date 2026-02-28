@@ -13,50 +13,111 @@ const VIDEOS = [
 
 export function IntroVideoSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [idx, setIdx] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const play = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    v.play().catch(() => {});
+  };
 
   useEffect(() => {
     const v = videoRef.current;
-    if (!v) return;
+    const section = sectionRef.current;
+    if (!v || !section) return;
 
-    const play = () => {
-      v.load();
-      v.play().catch(() => {
-        const resume = () => v.play().catch(() => {});
-        window.addEventListener("touchend", resume, { once: true });
-        window.addEventListener("click", resume, { once: true });
-      });
-    };
-
-    const onEnded = () => {
-      setIdx((i) => (i + 1) % VIDEOS.length);
-    };
+    const onEnded = () => setIdx((i) => (i + 1) % VIDEOS.length);
+    const onPlaying = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
 
     v.addEventListener("ended", onEnded);
+    v.addEventListener("playing", onPlaying);
+    v.addEventListener("pause", onPause);
+
+    const onCanPlay = () => play();
+    v.addEventListener("canplay", onCanPlay, { once: true });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) play();
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(section);
+
     play();
-    return () => v.removeEventListener("ended", onEnded);
+
+    // Quand la page devient visible (ex: onglet en arrière-plan)
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") play();
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    // Déblocage au premier geste utilisateur
+    const doc = document;
+    const unlock = () => {
+      play();
+      doc.removeEventListener("click", unlock, true);
+      doc.removeEventListener("touchstart", unlock, true);
+      doc.removeEventListener("touchend", unlock, true);
+      doc.removeEventListener("keydown", unlock, true);
+    };
+    doc.addEventListener("click", unlock, { capture: true });
+    doc.addEventListener("touchstart", unlock, { capture: true });
+    doc.addEventListener("touchend", unlock, { capture: true });
+    doc.addEventListener("keydown", unlock, { capture: true });
+
+    return () => {
+      v.removeEventListener("ended", onEnded);
+      v.removeEventListener("playing", onPlaying);
+      v.removeEventListener("pause", onPause);
+      v.removeEventListener("canplay", onCanPlay);
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      doc.removeEventListener("click", unlock, true);
+      doc.removeEventListener("touchstart", unlock, true);
+      doc.removeEventListener("touchend", unlock, true);
+      doc.removeEventListener("keydown", unlock, true);
+    };
   }, []);
 
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
     v.load();
+    v.muted = true;
     v.play().catch(() => {});
   }, [idx]);
 
   return (
     <section
+      ref={sectionRef}
       id="nova-intro-video"
       data-scene-section
       className="relative overflow-hidden"
       style={{ height: "100svh", minHeight: "600px" }}
     >
+      {/* Fond de remplacement quand la vidéo est en pause — masque le bouton play du navigateur */}
+      <div
+        className="pointer-events-none absolute inset-0 transition-opacity duration-500"
+        style={{
+          background: "linear-gradient(135deg, #020818 0%, #091830 50%, #020818 100%)",
+          opacity: isPlaying ? 0 : 1,
+        }}
+        aria-hidden
+      />
       <video
         ref={videoRef}
-        className="absolute inset-0 h-full w-full object-cover scale-110"
+        className={`absolute inset-0 h-full w-full object-cover scale-110 nova-video-no-controls transition-opacity duration-500 ${isPlaying ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        autoPlay
         muted
         playsInline
-        data-parallax-layer="slow"
+        preload="auto"
+        disablePictureInPicture
+        disableRemotePlayback
       >
         <source src={VIDEOS[idx].webm} type="video/webm" />
         <source src={VIDEOS[idx].mp4} type="video/mp4" />

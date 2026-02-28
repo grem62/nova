@@ -12,19 +12,14 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@react-three/drei": "latest",
-    "@react-three/fiber": "latest",
-    "@react-three/postprocessing": "^3.0.4",
     "@types/nodemailer": "^7.0.11",
     "@vercel/blob": "^2.3.0",
     "clsx": "^2.1.1",
-    "gsap": "latest",
     "next": "latest",
     "nodemailer": "^8.0.1",
     "react": "latest",
     "react-dom": "latest",
-    "resend": "^6.9.2",
-    "three": "latest"
+    "resend": "^6.9.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",

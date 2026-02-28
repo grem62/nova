@@ -1,8 +1,6 @@
 "use client";
 
 import { useLayoutEffect } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsapClient";
-import { sceneState } from "@/lib/sceneState";
 
 type RevealVariant =
   | "slide-left"
@@ -65,121 +63,57 @@ function getRevealVariant(sectionId: string, itemIndex: number): RevealVariant {
     "slide-right",
     "zoom-pop"
   ];
-
   return sectionVariants[itemIndex % sectionVariants.length];
 }
 
-export function useScrollScene(
-  containerRef: React.RefObject<HTMLElement | null>
-) {
+export function useScrollScene(containerRef: React.RefObject<HTMLElement | null>) {
   useLayoutEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const ctx = gsap.context(() => {
-      const sections = gsap.utils.toArray<HTMLElement>("[data-scene-section]");
+    // Setup section classes
+    const sections = container.querySelectorAll<HTMLElement>("[data-scene-section]");
+    sections.forEach((section, index) => {
+      section.classList.add("nova-scene-enter");
+      section.dataset.sceneVariant = sectionSceneVariantMap[section.id] ?? "scene-zoom";
+      section.style.setProperty("--scene-delay", `${Math.min(index * 60, 220)}ms`);
+    });
 
-      sections.forEach((section, index) => {
-        section.classList.add("nova-scene-enter");
-        section.dataset.sceneVariant =
-          sectionSceneVariantMap[section.id] ?? "scene-zoom";
-        section.style.setProperty(
-          "--scene-delay",
-          `${Math.min(index * 60, 220)}ms`
-        );
+    // Setup reveal items
+    const revealItems = container.querySelectorAll<HTMLElement>("[data-reveal]");
+    const sectionItemCount = new Map<string, number>();
 
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top 84%",
-          onEnter: () => section.classList.add("is-visible"),
-          onLeaveBack: () => section.classList.remove("is-visible")
-        });
-      });
+    revealItems.forEach((el, globalIndex) => {
+      const section = el.closest<HTMLElement>("[data-scene-section]");
+      const sectionId = section?.id || "default";
+      const localIndex = sectionItemCount.get(sectionId) ?? 0;
+      sectionItemCount.set(sectionId, localIndex + 1);
+      const variant = getRevealVariant(sectionId, localIndex);
+      const staggerStep = sectionStaggerStepMap[sectionId] ?? 85;
 
-      const revealItems = gsap.utils.toArray<HTMLElement>("[data-reveal]");
-      const sectionItemCount = new Map<string, number>();
+      el.classList.add("nova-reveal-block");
+      el.dataset.revealVariant = variant;
+      el.style.setProperty("--reveal-delay", `${(localIndex % 4) * staggerStep}ms`);
+      el.style.setProperty("--reveal-index", `${globalIndex % 6}`);
+    });
 
-      revealItems.forEach((el, globalIndex) => {
-        const section = el.closest<HTMLElement>("[data-scene-section]");
-        const sectionId = section?.id || "default";
-        const localIndex = sectionItemCount.get(sectionId) ?? 0;
-        sectionItemCount.set(sectionId, localIndex + 1);
-        const variant = getRevealVariant(sectionId, localIndex);
-        const staggerStep = sectionStaggerStepMap[sectionId] ?? 85;
-
-        el.classList.add("nova-reveal-block");
-        el.dataset.revealVariant = variant;
-        el.style.setProperty("--reveal-delay", `${(localIndex % 4) * staggerStep}ms`);
-        el.style.setProperty("--reveal-index", `${globalIndex % 6}`);
-
-        ScrollTrigger.create({
-          trigger: el,
-          start: "top 88%",
-          onEnter: () => el.classList.add("is-visible"),
-          onLeaveBack: () => el.classList.remove("is-visible")
-        });
-      });
-
-      gsap.to(sceneState, {
-        heroScale: 1.18,
-        cameraOffsetZ: -1.2,
-        ease: "none",
-        scrollTrigger: {
-          trigger: container,
-          start: "top top",
-          end: "+=1600",
-          scrub: true
-        }
-      });
-
-      const parallaxSlow = gsap.utils.toArray<HTMLElement>(
-        "[data-parallax-layer='slow']"
-      );
-      const parallaxFast = gsap.utils.toArray<HTMLElement>(
-        "[data-parallax-layer='fast']"
-      );
-
-      parallaxSlow.forEach((el) => {
-        gsap.to(el, {
-          y: 60,
-          ease: "none",
-          scrollTrigger: {
-            trigger: container,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true
+    // Intersection Observer (léger, natif)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          } else {
+            entry.target.classList.remove("is-visible");
           }
         });
-      });
+      },
+      { rootMargin: "-16% 0px -16% 0px", threshold: 0 }
+    );
 
-      parallaxFast.forEach((el) => {
-        gsap.to(el, {
-          y: -80,
-          ease: "none",
-          scrollTrigger: {
-            trigger: container,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: true
-          }
-        });
-      });
+    sections.forEach((s) => observer.observe(s));
+    revealItems.forEach((el) => observer.observe(el));
 
-      const heroVideo = document.getElementById("nova-hero-video");
-      if (heroVideo) {
-        gsap.to(heroVideo, {
-          yPercent: -12,
-          ease: "none",
-          scrollTrigger: {
-            trigger: "#top",
-            start: "top top",
-            end: "bottom top",
-            scrub: true
-          }
-        });
-      }
-    }, container);
-
-    return () => ctx.revert();
+    return () => observer.disconnect();
   }, [containerRef]);
 }

@@ -43,6 +43,14 @@ body {
                Inter, system-ui, sans-serif;
 }
 
+/* Masquer les contrôles natifs de la vidéo hero (bouton play, barre de progression) */
+.nova-video-no-controls::-webkit-media-controls,
+.nova-video-no-controls::-webkit-media-controls-panel,
+.nova-video-no-controls::-webkit-media-controls-play-button,
+.nova-video-no-controls::-webkit-media-controls-start-playback-button {
+  display: none !important;
+}
+
 /* Compenser la hauteur du header fixe lors du scroll vers ancre */
 [data-scene-section] { scroll-margin-top: 5rem; }
 @media (min-width: 768px) { [data-scene-section] { scroll-margin-top: 5.5rem; } }
@@ -272,46 +280,6 @@ body {
 .scroll-indicator { animation: scroll-bounce 2.2s ease-in-out infinite; }
 
 /* ═══════════════════════════════════════════════════════════════
-   STARS BACKGROUND
-═══════════════════════════════════════════════════════════════ */
-.nova-stars {
-  position: fixed; inset: 0;
-  pointer-events: none; z-index: 0; overflow: hidden;
-}
-.nova-star {
-  position: absolute; bottom: -10px;
-  width: 2px; height: 2px;
-  background: rgba(238,255,0,0.5);
-  border-radius: 50%;
-  box-shadow: 0 0 4px rgba(238,255,0,0.6);
-  animation: nova-rise linear infinite;
-}
-.nova-star::before {
-  content: "";
-  position: absolute; top: 0; left: 50%;
-  transform: translateX(-50%) rotate(35deg);
-  transform-origin: top center;
-  width: 1px; height: 80px;
-  background: linear-gradient(to bottom, rgba(238,255,0,0.3), transparent);
-}
-@keyframes nova-rise {
-  0%   { transform: translate3d(-20vw, 0, 0);    opacity: 0;   }
-  10%  { opacity: 0.5; }
-  90%  { opacity: 0.5; }
-  100% { transform: translate3d(20vw, -120vh, 0); opacity: 0; }
-}
-.nova-star:nth-child(1)  { left: 5%;  animation-duration: 3s;   }
-.nova-star:nth-child(2)  { left: 15%; animation-duration: 4s;   }
-.nova-star:nth-child(3)  { left: 25%; animation-duration: 2.5s; }
-.nova-star:nth-child(4)  { left: 40%; animation-duration: 3.5s; }
-.nova-star:nth-child(5)  { left: 55%; animation-duration: 4.5s; }
-.nova-star:nth-child(6)  { left: 65%; animation-duration: 3s;   }
-.nova-star:nth-child(7)  { left: 75%; animation-duration: 2.8s; }
-.nova-star:nth-child(8)  { left: 85%; animation-duration: 3.2s; }
-.nova-star:nth-child(9)  { left: 92%; animation-duration: 4s;   }
-.nova-star:nth-child(10) { left: 98%; animation-duration: 3.6s; }
-
-/* ═══════════════════════════════════════════════════════════════
    COACH PHOTO
 ═══════════════════════════════════════════════════════════════ */
 .coach-photo {
@@ -380,11 +348,22 @@ body {
   transition: border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
   position: relative; z-index: 2;
 }
-.timeline-step.active .timeline-node {
+.timeline-step.active .timeline-node,
+.timeline-step.is-visible .timeline-node {
   background: var(--y);
   border-color: var(--y);
   color: #020818;
   box-shadow: 0 0 20px rgba(238,255,0,0.5);
+}
+
+/* Ligne timeline qui s'étire au scroll (CSS, sans GSAP) */
+.timeline-fill {
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 1.2s ease-out;
+}
+#philosophie.is-visible .timeline-fill {
+  transform: scaleY(1);
 }
 
 /* ═══════════════════════════════════════════════════════════════

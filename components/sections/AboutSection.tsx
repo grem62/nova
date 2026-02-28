@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsapClient";
+import { useState } from "react";
 
 const Y   = "#EEFF00";
 const Y06 = "rgba(238,255,0,0.06)";
@@ -50,65 +49,8 @@ function ReviewCard({ r, Y, Y08, Y22, CARD }: { r: Review; Y: string; Y08: strin
 }
 
 export function AboutSection({ reviews = [] }: { reviews?: Review[] }) {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const photoRef   = useRef<HTMLDivElement | null>(null);
-  const cardsRef   = useRef<HTMLElement[]>([]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const ctx = gsap.context(() => {
-
-      /* ── Photo glisse depuis la gauche au scroll ── */
-      if (photoRef.current) {
-        gsap.fromTo(photoRef.current,
-          { opacity: 0, x: -60 },
-          {
-            opacity: 1, x: 0,
-            ease: "power3.out",
-            duration: 1,
-            scrollTrigger: {
-              trigger: photoRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
-            }
-          }
-        );
-      }
-
-      /* ── Cards entrent depuis la droite en cascade au scroll ── */
-      cardsRef.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.fromTo(el,
-          { opacity: 0, x: 80 },
-          {
-            opacity: 1, x: 0,
-            ease: "power3.out",
-            duration: 0.85,
-            scrollTrigger: {
-              trigger: el,
-              start: "top 88%",
-              toggleActions: "play none none reverse",
-            },
-            delay: i * 0.12,
-          }
-        );
-      });
-
-    }, section);
-
-    return () => ctx.revert();
-  }, []);
-
-  const addCard = (el: HTMLElement | null, i: number) => {
-    if (el) cardsRef.current[i] = el;
-  };
-
   return (
     <section
-      ref={sectionRef}
       id="about"
       data-scene-section
       className="relative overflow-hidden py-20"
@@ -132,8 +74,8 @@ export function AboutSection({ reviews = [] }: { reviews?: Review[] }) {
         {/* Grid */}
         <div className="grid gap-6 grid-cols-1 lg:grid-cols-[1fr_1.6fr]">
 
-          {/* ══ GAUCHE — Photo ══ */}
-          <div ref={photoRef} className="relative">
+          {/* ══ GAUCHE — Photo (data-reveal = animation au scroll) ══ */}
+          <div data-reveal className="relative">
 
             {/* NOA décoratif */}
             <div className="absolute inset-x-0 bottom-0 z-20 flex items-end justify-center overflow-visible select-none pointer-events-none">
@@ -156,12 +98,12 @@ export function AboutSection({ reviews = [] }: { reviews?: Review[] }) {
             </div>
           </div>
 
-          {/* ══ DROITE — Cards ══ */}
+          {/* ══ DROITE — Cards (data-reveal = animation au scroll) ══ */}
           <div className="flex flex-col gap-4">
 
             {/* Card 1 — Citation */}
             <blockquote
-              ref={(el) => addCard(el as HTMLElement, 0)}
+              data-reveal
               className="nova-card relative overflow-hidden px-6 py-6"
               style={{ background: `linear-gradient(135deg, ${CARD} 0%, #050f20 100%)`, border: `1px solid ${Y22}` }}
             >
@@ -182,7 +124,7 @@ export function AboutSection({ reviews = [] }: { reviews?: Review[] }) {
             {/* Card 2 — Formation + Spécialités */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div
-                ref={(el) => addCard(el as HTMLElement, 1)}
+                data-reveal
                 className="nova-card nova-card-line p-5 flex flex-col"
                 style={{ background: `radial-gradient(circle at 100% 0%, ${Y08} 0%, transparent 55%), ${CARD}` }}
               >
@@ -206,7 +148,7 @@ export function AboutSection({ reviews = [] }: { reviews?: Review[] }) {
               </div>
 
               <div
-                ref={(el) => addCard(el as HTMLElement, 2)}
+                data-reveal
                 className="nova-card nova-card-line p-5"
                 style={{ background: `radial-gradient(circle at 100% 0%, ${Y08} 0%, transparent 55%), ${CARD}` }}
               >
@@ -229,7 +171,7 @@ export function AboutSection({ reviews = [] }: { reviews?: Review[] }) {
 
             {/* Card 3 — Expérience */}
             <div
-              ref={(el) => addCard(el as HTMLElement, 3)}
+              data-reveal
               className="nova-card nova-card-line flex items-center justify-between px-6 py-4"
               style={{ background: `linear-gradient(90deg, ${Y08} 0%, transparent 60%), ${CARD}` }}
             >
