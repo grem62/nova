@@ -133,7 +133,7 @@ export function IntroVideoSection() {
       />
 
       {/* ── Contenu ── */}
-      <div className="relative z-10 flex h-full flex-col justify-center pl-20 pr-6 sm:px-10 lg:px-20">
+      <div className="relative z-10 flex h-full flex-col justify-center pl-14 pr-6 sm:px-10 lg:px-20">
         <div className="max-w-3xl" data-reveal>
           {/* Headline */}
           <h1

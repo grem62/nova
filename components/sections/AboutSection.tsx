@@ -111,7 +111,7 @@ export function AboutSection({ reviews = [] }: { reviews?: Review[] }) {
             </div>
 
             {/* Photo */}
-            <div className="relative z-10" style={{ height: "300px", marginBottom: "60px" }}>
+            <div className="relative z-10 mb-20 sm:mb-[60px]" style={{ height: "300px" }}>
               <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-28 w-52 rounded-full blur-[55px] z-0"
                 style={{ background: "rgba(238,255,0,0.18)" }} />
               <Image

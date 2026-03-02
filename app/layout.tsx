@@ -3,9 +3,18 @@ import type { ReactNode } from "react";
 import type { Viewport } from "next";
 
 export const metadata = {
-  title: "Nova Coaching – Coaching sportif premium",
+  title: "Nova",
   description:
-    "Landing page cinématique 3D pour Nova Coaching : coaching sportif personnalisé, programmes sur‑mesure et accompagnement haute performance."
+    "Landing page cinématique 3D pour Nova Coaching : coaching sportif personnalisé, programmes sur‑mesure et accompagnement haute performance.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon.png", sizes: "any", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
