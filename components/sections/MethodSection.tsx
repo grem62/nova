@@ -109,7 +109,14 @@ export function MethodSection() {
 
               {/* Icon */}
               <div className="spotlight-icon spotlight-icon-bounce" aria-hidden>
-                <Image src={step.icon} alt="" width={40} height={40} className="spotlight-icon-img" />
+                <Image
+                  src={step.icon}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="spotlight-icon-img"
+                  style={{ filter: "brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(700%) hue-rotate(22deg) brightness(108%)" }}
+                />
               </div>
 
               {/* Content */}

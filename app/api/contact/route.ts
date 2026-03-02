@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const safe = { nom: esc(nom), email: esc(email), objectif: esc(objectif), disponibilites: esc(disponibilites ?? "—") };
 
     const { error } = await resend.emails.send({
-      from: "Nova Coaching <onboarding@resend.dev>",
+      from: "Nova Coaching <contact@novacoaching.eu>",
       replyTo: email,
       to,
       subject: `Nouvelle demande de séance — ${nom}`,

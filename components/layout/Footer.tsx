@@ -24,18 +24,24 @@ export function Footer({ onFaqClick, onReviewClick }: FooterProps) {
             >
               FAQ
             </button>
-            <a href="#offre" className="text-[12px] font-medium text-nova-text-2 transition hover:text-nova-text">
+            <a href="/#offre" className="text-[12px] font-medium text-nova-text-2 transition hover:text-nova-text">
               Séance offerte
             </a>
-            <a href="mailto:contact@nova-coaching.fr" className="text-[12px] font-medium text-nova-text-2 transition hover:text-nova-text">
+            <a href="mailto:novacoaching.contact@gmail.com" className="text-[12px] font-medium text-nova-text-2 transition hover:text-nova-text">
               Contact
             </a>
-            <button
-              type="button"
-              className="text-[12px] font-medium text-nova-text-3 transition hover:text-nova-text-2"
-            >
+            <a href="/mentions-legales" className="text-[12px] font-medium text-nova-text-3 transition hover:text-nova-text-2">
+              Mentions légales
+            </a>
+            <a href="/politique-confidentialite" className="text-[12px] font-medium text-nova-text-3 transition hover:text-nova-text-2">
+              Confidentialité
+            </a>
+            <a href="/cgu" className="text-[12px] font-medium text-nova-text-3 transition hover:text-nova-text-2">
               CGU
-            </button>
+            </a>
+            <a href="/cgv" className="text-[12px] font-medium text-nova-text-3 transition hover:text-nova-text-2">
+              CGV
+            </a>
           </nav>
         </div>
 

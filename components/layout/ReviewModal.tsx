@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 const Y   = "#EEFF00";
@@ -8,32 +9,72 @@ const Y22 = "rgba(238,255,0,0.22)";
 const CARD = "#061224";
 
 export type Review = {
+  id?: string;
   name: string;
   text: string;
   stars: number;
+  createdAt?: string;
+  photoUrl?: string | null;
+  photoBase64?: string;
+  photoMime?: string;
 };
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onSave: (r: Review) => void;
+  onSave: (r: Review) => void | Promise<void>;
 };
 
 export function ReviewModal({ open, onClose, onSave }: Props) {
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [stars, setStars] = useState(5);
+  const [photo, setPhoto] = useState<{ base64: string; mime: string } | null>(null);
+  const [consent, setConsent] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   if (!open) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || file.size > 2 * 1024 * 1024) {
+      setError(file && file.size > 2 * 1024 * 1024 ? "Photo max 2 Mo" : "");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setPhoto({ base64: result, mime: file.type });
+      setError("");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim() || !text.trim()) return;
-    onSave({ name: name.trim(), text: text.trim(), stars });
-    setName("");
-    setText("");
-    setStars(5);
-    onClose();
+    if (!name.trim() || !text.trim() || !consent) return;
+    setError("");
+    setSaving(true);
+    try {
+      await onSave({
+        name: name.trim(),
+        text: text.trim(),
+        stars,
+        ...(photo && { photoBase64: photo.base64, photoMime: photo.mime }),
+      });
+      setName("");
+      setText("");
+      setStars(5);
+      setPhoto(null);
+      setConsent(false);
+      onClose();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Erreur lors de l'envoi.";
+      setError(msg + " Réessaie ou écris à novacoaching.contact@gmail.com");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -101,6 +142,46 @@ export function ReviewModal({ open, onClose, onSave }: Props) {
             />
           </label>
 
+          {/* Photo (optionnelle) */}
+          <label className="block space-y-1.5">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-nova-text">Ta photo (optionnel)</span>
+            <div className="flex items-center gap-3">
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handlePhotoChange}
+                className="hidden"
+                id="review-photo"
+              />
+              <label
+                htmlFor="review-photo"
+                className="flex h-14 w-14 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-dashed transition hover:border-opacity-80"
+                style={{ borderColor: Y22, background: Y08 }}
+              >
+                {photo ? (
+                  <img src={photo.base64} alt="Aperçu" className="h-full w-full rounded-lg object-cover" />
+                ) : (
+                  <span className="text-[18px] text-nova-text-3">📷</span>
+                )}
+              </label>
+              <div className="min-w-0">
+                <p className="text-[11px] text-nova-text-3">
+                  {photo ? "Photo ajoutée" : "JPG, PNG ou WebP — max 2 Mo"}
+                </p>
+                {photo && (
+                  <button
+                    type="button"
+                    onClick={() => setPhoto(null)}
+                    className="mt-0.5 text-[10px] font-semibold"
+                    style={{ color: Y }}
+                  >
+                    Retirer
+                  </button>
+                )}
+              </div>
+            </div>
+          </label>
+
           {/* Text */}
           <label className="block space-y-1.5">
             <div className="flex items-center justify-between">
@@ -126,12 +207,32 @@ export function ReviewModal({ open, onClose, onSave }: Props) {
             )}
           </label>
 
+          {/* Consentement RGPD */}
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(e) => setConsent(e.target.checked)}
+              className="mt-1 h-4 w-4 shrink-0 rounded border-2"
+              style={{ borderColor: Y22, accentColor: Y }}
+            />
+            <span className="text-[11px] leading-relaxed text-nova-text-2">
+              J&apos;accepte la publication de mon avis et le traitement de mes données selon la{" "}
+              <Link href="/politique-confidentialite" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: Y }}>
+                politique de confidentialité
+              </Link>
+              . *
+            </span>
+          </label>
+
+          {error && <p className="text-sm" style={{ color: "#f87171" }}>{error}</p>}
           <button
             type="submit"
-            className="group relative w-full overflow-hidden rounded-full py-3 text-[12px] font-bold uppercase tracking-[0.16em] text-black transition active:scale-[0.99]"
+            disabled={saving || !consent}
+            className="group relative w-full overflow-hidden rounded-full py-3 text-[12px] font-bold uppercase tracking-[0.16em] text-black transition active:scale-[0.99] disabled:opacity-70"
             style={{ background: Y, boxShadow: `0 0 30px rgba(238,255,0,0.30)` }}
           >
-            <span className="relative z-10">Publier mon avis →</span>
+            <span className="relative z-10">{saving ? "Envoi…" : "Publier mon avis →"}</span>
             <span className="absolute inset-0 -skew-x-12 translate-x-[-120%] bg-white/25 transition-transform duration-700 group-hover:translate-x-[220%]" />
           </button>
         </form>

@@ -56,7 +56,7 @@ export function IntroVideoSection() {
     };
     document.addEventListener("visibilitychange", onVisibilityChange);
 
-    // Déblocage au premier geste utilisateur
+    // Déblocage au premier geste utilisateur (clic, toucher, touche, ou mouvement souris sur desktop)
     const doc = document;
     const unlock = () => {
       play();
@@ -133,7 +133,7 @@ export function IntroVideoSection() {
       />
 
       {/* ── Contenu ── */}
-      <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-10 lg:px-20">
+      <div className="relative z-10 flex h-full flex-col justify-center pl-20 pr-6 sm:px-10 lg:px-20">
         <div className="max-w-3xl" data-reveal>
           {/* Headline */}
           <h1
@@ -182,7 +182,7 @@ export function IntroVideoSection() {
               <span className="absolute inset-0 -skew-x-12 translate-x-[-120%] bg-white/25 transition-transform duration-700 group-hover:translate-x-[220%]" />
             </a>
             <a
-              href="#philosophie"
+              href="#methode"
               className="inline-flex h-12 sm:h-12 items-center rounded-full px-6 sm:px-8 text-[11px] sm:text-[12px] font-medium tracking-wide text-nova-text transition"
               style={{ border: "1px solid rgba(238,255,0,0.20)", background: "rgba(238,255,0,0.04)" }}
             >

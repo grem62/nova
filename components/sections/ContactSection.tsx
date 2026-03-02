@@ -10,7 +10,6 @@ const Y22  = "rgba(238,255,0,0.22)";
 const CARD = "#061224";
 
 const gymFeatures = ["Cardio & Musculation", "Vestiaires", "Parking gratuit", "WiFi"];
-const extraFeatures = ["Suivi à domicile", "Séances en extérieur"];
 
 export function ContactSection() {
   const [copied, setCopied] = useState(false);
@@ -35,7 +34,8 @@ export function ContactSection() {
           alt=""
           fill
           sizes="100vw"
-          quality={100}
+          quality={75}
+          loading="lazy"
           className="object-cover"
           style={{ opacity: 0.75, objectPosition: "center 10%", imageRendering: "crisp-edges" }}
         />
@@ -65,8 +65,11 @@ export function ContactSection() {
             {/* Photo */}
             <div className="relative h-56 w-full overflow-hidden sm:h-64">
               <Image
-                src="/assets/gym-photo.png" alt="Basic-Fit Berck-sur-Mer"
-                fill sizes="(max-width: 1024px) 100vw, 560px"
+                src="/assets/gym-photo.png"
+                alt="Basic-Fit Berck-sur-Mer"
+                fill
+                sizes="(max-width: 1024px) 100vw, 560px"
+                loading="lazy"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
               />
               <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${CARD} 0%, ${CARD}44 40%, transparent 70%)` }} />
@@ -85,7 +88,11 @@ export function ContactSection() {
             {/* Info */}
             <div className="px-5 pb-5 pt-3">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full px-3 py-1.5" style={{ border: `1px solid ${Y22}`, background: Y08 }}>
-                <span className="text-[13px] leading-none">📍</span>
+                <span className="relative h-4 w-4 shrink-0">
+                  <Image src="/icons/icon-location.png" alt="" fill sizes="16px" className="object-contain"
+                    style={{ filter: "brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(700%) hue-rotate(22deg) brightness(108%)" }}
+                  />
+                </span>
                 <span className="text-[11px] font-semibold" style={{ color: Y }}>Berck-sur-Mer, 62610</span>
               </div>
               <h3 className="text-[18px] font-bold tracking-tight text-nova-text">Basic-Fit</h3>
@@ -165,11 +172,18 @@ export function ContactSection() {
             >
               <p className="eyebrow mb-3">Hors salle</p>
               <div className="flex flex-col gap-2">
-                {extraFeatures.map((f, i) => (
-                  <div key={f} className="flex items-center gap-3 rounded-xl px-3 py-2.5"
+                {[
+                  { label: "Suivi à domicile", icon: "/icons/icon-home.png" },
+                  { label: "Séances en extérieur", icon: "/icons/icon-outdoor.png" },
+                ].map(({ label, icon }) => (
+                  <div key={label} className="flex items-center gap-3 rounded-xl px-3 py-2.5"
                     style={{ border: `1px solid ${Y22}`, background: Y08 }}>
-                    <span className="text-base leading-none">{i === 0 ? "🏠" : "🌿"}</span>
-                    <span className="text-[12px] font-semibold text-nova-text">{f}</span>
+                    <span className="relative h-5 w-5 shrink-0">
+                      <Image src={icon} alt="" fill sizes="20px" className="object-contain"
+                        style={{ filter: "brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(700%) hue-rotate(22deg) brightness(108%)" }}
+                      />
+                    </span>
+                    <span className="text-[12px] font-semibold text-nova-text">{label}</span>
                   </div>
                 ))}
               </div>

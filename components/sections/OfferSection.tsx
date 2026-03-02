@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 const Y   = "#EEFF00";
@@ -26,6 +27,7 @@ const objectifOptions = [
 export function OfferSection() {
   const [status, setStatus] = useState<"idle"|"loading"|"success"|"error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [consent, setConsent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,6 +68,7 @@ export function OfferSection() {
           alt=""
           fill
           sizes="100vw"
+          loading="lazy"
           className="object-cover object-center"
           style={{ opacity: 0.18 }}
         />
@@ -208,6 +211,25 @@ export function OfferSection() {
                 <textarea name="message" rows={2} placeholder="Contexte, blessures, objectifs précis…" className="nova-input resize-none" />
               </label>
 
+              {/* Consentement RGPD */}
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  required
+                  className="mt-1 h-4 w-4 shrink-0 rounded border-2 accent-[#EEFF00]"
+                  style={{ borderColor: Y22, background: consent ? Y : "transparent" }}
+                />
+                <span className="text-[11px] leading-relaxed text-nova-text-2">
+                  J&apos;accepte que mes données soient traitées pour répondre à ma demande, conformément à la{" "}
+                  <Link href="/politique-confidentialite" target="_blank" rel="noopener noreferrer" className="underline" style={{ color: Y }}>
+                    politique de confidentialité
+                  </Link>
+                  . *
+                </span>
+              </label>
+
               {/* Feedback */}
               {status === "success" && (
                 <div className="rounded-xl px-4 py-3 text-[12px] font-medium" style={{ background: "rgba(238,255,0,0.08)", border: "1px solid rgba(238,255,0,0.22)", color: Y }}>
@@ -222,7 +244,7 @@ export function OfferSection() {
 
               <button
                 type="submit"
-                disabled={status === "loading" || status === "success"}
+                disabled={status === "loading" || status === "success" || !consent}
                 className="group relative mt-2 w-full overflow-hidden rounded-full py-3.5 text-[12px] font-bold uppercase tracking-[0.16em] text-black transition active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ background: Y, boxShadow: `0 0 40px rgba(238,255,0,0.35)` }}
               >

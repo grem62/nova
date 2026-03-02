@@ -14,8 +14,6 @@ import { ContactSection } from "@/components/sections/ContactSection";
 import { FaqOverlay } from "@/components/sections/FaqOverlay";
 import { ReviewModal, type Review } from "@/components/layout/ReviewModal";
 
-const STORAGE_KEY = "nova_reviews";
-
 export default function Page() {
   const containerRef = useRef<HTMLElement | null>(null);
   const [isFaqOpen, setIsFaqOpen] = useState(false);
@@ -25,16 +23,27 @@ export default function Page() {
   useScrollScene(containerRef);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setReviews(JSON.parse(stored));
-    } catch {}
+    fetch("/api/reviews")
+      .then((r) => r.json())
+      .then((data) => setReviews(Array.isArray(data) ? data : []))
+      .catch(() => setReviews([]));
   }, []);
 
-  const handleSaveReview = (r: Review) => {
-    const updated = [...reviews, r];
-    setReviews(updated);
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); } catch {}
+  const handleSaveReview = async (r: Review) => {
+    const body: Record<string, unknown> = { name: r.name, text: r.text, stars: r.stars };
+    if (r.photoBase64) body.photoBase64 = r.photoBase64;
+    if (r.photoMime) body.photoMime = r.photoMime;
+    const res = await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      throw new Error(d.error || "Erreur");
+    }
+    const created = await res.json();
+    setReviews((prev) => [created, ...prev]);
   };
 
   return (

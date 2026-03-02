@@ -10,10 +10,8 @@
 .nova-marquee-track {
   animation: marquee-scroll 28s linear infinite;
   width: max-content;
-}
-
-.nova-marquee-track:hover {
-  animation-play-state: paused;
+  will-change: transform;
+  contain: layout style;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -21,8 +19,14 @@
 ═══════════════════════════════════════════════════════════════ */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scroll fluide sur iOS */
+main {
+  -webkit-overflow-scrolling: touch;
 }
 
 :root {
@@ -41,6 +45,15 @@ body {
   color: #e8f0ff;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
                Inter, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .nova-scene-enter,
+  .nova-reveal-block,
+  .nova-marquee-track { animation: none !important; transition: none !important; }
+  .nova-scene-enter { opacity: 1; transform: none; }
+  .nova-reveal-block { opacity: 1; transform: none; }
 }
 
 /* Masquer les contrôles natifs de la vidéo hero (bouton play, barre de progression) */
@@ -501,7 +514,7 @@ body {
   50%       { transform: translateX(-50%) translateY(-8px); }
 }
 .nova-method-card .spotlight-icon {
-  position: absolute; top: 12%; left: 50%;
+  position: absolute; top: 20%; left: 50%;
   transform: translateX(-50%);
   width: 4rem; height: 4rem; border-radius: 9999px;
   background:
@@ -511,7 +524,7 @@ body {
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 0 20px rgba(238,255,0,0.6), 0 0 40px rgba(0,0,0,0.8);
   z-index: 2; pointer-events: none;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 1.5s ease-in-out, box-shadow 1.5s ease-in-out, filter 1.5s ease-in-out;
 }
 .nova-method-card .spotlight-icon-bounce { animation: icon-bounce 2s ease-in-out infinite; }
