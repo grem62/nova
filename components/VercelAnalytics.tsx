@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
-import { inject } from "@vercel/analytics";
+import Script from "next/script";
 
 export function VercelAnalytics() {
-  useEffect(() => {
-    inject();
-  }, []);
-  return null;
+  return (
+    <Script
+      defer
+      src="/_vercel/insights/script.js"
+      strategy="afterInteractive"
+    />
+  );
 }
