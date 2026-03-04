@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
 import type { Viewport } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 export const metadata = {
   title: "Nova",
@@ -31,6 +32,7 @@ export default function RootLayout(props: { children: ReactNode }) {
         className="bg-scene-bg text-nova-text font-display antialiased"
       >
         {props.children}
+        <SpeedInsights />
       </body>
     </html>
   );
