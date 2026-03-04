@@ -2,7 +2,7 @@ import "./globals.css";
 import type { ReactNode } from "react";
 import type { Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/react";
-import { Analytics } from "@vercel/analytics/next";
+import { VercelAnalytics } from "@/components/VercelAnalytics";
 
 export const metadata = {
   title: "Nova",
@@ -34,7 +34,7 @@ export default function RootLayout(props: { children: ReactNode }) {
       >
         {props.children}
         <SpeedInsights />
-        <Analytics />
+        <VercelAnalytics />
       </body>
     </html>
   );
